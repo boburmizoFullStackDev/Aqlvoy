@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O'quvchi paneli | AQLVOY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+         :root {
+            --dark-bg: #0a0a0f;
+            --card-bg: #14141c;
+            --cyan-400: #22d3ee;
+            --cyan-500: #06b6d4;
+            --blue-600: #2563eb;
+            /* Button & text tokens */
+            --btn-bg: var(--cyan-500);
+            --btn-text: #031124;
+            --text: #e6f0ff;
+            --muted: rgba(230, 240, 255, 0.6);
+            --muted-2: rgba(230, 240, 255, 0.35);
+            --accent: var(--cyan-500);
+            /* UI variables */
+            --bg: var(--dark-bg);
+            --card: var(--card-bg);
+            --glass: rgba(255, 255, 255, 0.04);
+        }
+        /* Light mode variables */
+        
+        body.light-mode {
+            /* Ensure both variable sets used across the file are overridden */
+            --dark-bg: #f6f8fb;
+            /* page background in light mode */
+            --card-bg: #ffffff;
+            /* cards / panels in light mode */
+            --bg: var(--dark-bg);
+            --card: var(--card-bg);
+            --text: #0d1b4b;
+            --muted: #6b7280;
+            --btn-bg: var(--blue-600);
+            --btn-text: #ffffff;
+            --muted-2: rgba(13, 27, 75, 0.12);
+            --glass: rgba(13, 27, 75, 0.04);
+            background: var(--bg);
+            color: var(--text);
+        }
+        /* Explicit color rules to prevent text/button colors from merging */
+        /* Global text color */
+        
+        body,
+        .dash-title,
+        .sidebar-logo,
+        .splash-kids-title,
+        .dash-card-title,
+        .subject-card h3,
+        .ai-chat-header {
+            color: var(--text) !important;
+        }
+        /* Muted texts */
+        
+        .sidebar-item,
+        .activity-time,
+        .dash-table th,
+        .dash-table td,
+        .sidebar-role {
+            color: var(--muted) !important;
+        }
+        /* Buttons and interactive controls */
+        
+        .ai-send,
+        #theme-toggle-btn,
+        .lang-select,
+        .theme-toggle {
+            background: var(--btn-bg) !important;
+            color: var(--btn-text) !important;
+            border-color: transparent !important;
+        }
+        /* Demo chips: ensure readable text and clear hover */
+        
+        .demo-chip {
+            color: var(--text) !important;
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.06);
+        }
+        
+        .demo-chip:hover {
+            background: linear-gradient(90deg, rgba(6, 182, 212, 0.12), rgba(37, 99, 235, 0.12));
+            color: var(--btn-text) !important;
+        }
+        /* Sidebar active item should use accent color for clear state */
+        
+        .sidebar-item.active {
+            background: rgba(6, 182, 212, 0.12) !important;
+            color: var(--accent) !important;
+        }
+        /* Inputs keep readable text */
+        
+        .ai-input {
+            color: var(--text) !important;
+            background: rgba(255, 255, 255, 0.03) !important;
+            border-color: rgba(255, 255, 255, 0.06) !important;
+        }
+        /* Card elevation so stat/dash cards don't blend into the background */
+        
+        .stat-card,
+        .dash-card,
+        .subject-card,
+        .ai-chat {
+            background: var(--card) !important;
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+            box-shadow: 0 10px 30px rgba(2, 6, 23, 0.55);
+            backdrop-filter: blur(6px);
+            transition: transform 0.14s ease, box-shadow 0.14s ease;
+        }
+        
+        .stat-card:hover,
+        .dash-card:hover,
+        .subject-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 18px 42px rgba(2, 6, 23, 0.65);
+        }
+        /* Light-mode card styles */
+        
+        body.light-mode .stat-card,
+        body.light-mode .dash-card,
+        body.light-mode .subject-card,
+        body.light-mode .ai-chat {
+            border: 1px solid rgba(13, 27, 75, 0.06) !important;
+            box-shadow: 0 8px 22px rgba(13, 27, 75, 0.04) !important;
+            backdrop-filter: none !important;
+        }
+        /* Light-mode component overrides */
+        
+        body.light-mode .dashboard,
+        body.light-mode {
+            background: var(--bg) !important;
+            color: var(--text) !important;
+        }
+        
+        body.light-mode .sidebar {
+            background: var(--card) !important;
+            border-right: 1px solid rgba(13, 27, 75, 0.06) !important;
+            color: var(--text) !important;
+        }
+        
+        body.light-mode .dash-main {
+            background: var(--bg) !important;
+            color: var(--text) !important;
+        }
+        
+        body.light-mode .dash-card,
+        body.light-mode .stat-card,
+        body.light-mode .subject-card,
+        body.light-mode .ai-chat {
+            background: var(--card) !important;
+            border: 1px solid rgba(13, 27, 75, 0.06) !important;
+            color: var(--text) !important;
+            box-shadow: none !important;
+        }
+        
+        body.light-mode .stat-card .sc-value {
+            color: var(--text) !important;
+        }
+        
+        body.light-mode .progress-bar-wrap {
+            background: rgba(13, 27, 75, 0.04) !important;
+        }
+        
+        body.light-mode .progress-bar::after {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)) !important;
+        }
+        
+        body.light-mode .sidebar-item {
+            color: rgba(13, 27, 75, 0.8) !important;
+        }
+        
+        body.light-mode .sidebar-item:hover {
+            background: rgba(13, 27, 75, 0.02) !important;
+        }
+        
+        body.light-mode .sidebar-item.active {
+            background: rgba(6, 182, 212, 0.08) !important;
+            color: var(--cyan-500) !important;
+        }
+        
+        body.light-mode .ai-input,
+        body.light-mode .demo-chip {
+            background: rgba(13, 27, 75, 0.03) !important;
+            color: var(--text) !important;
+            border-color: rgba(13, 27, 75, 0.06) !important;
+        }
+        
+        body.light-mode .splash-kids {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.06), rgba(59, 130, 246, 0.04)) !important;
+            border: 1px solid rgba(13, 27, 75, 0.04) !important;
+            color: var(--text) !important;
+        }
+        
+        body.light-mode .splash-kids-title,
+        body.light-mode .splash-kids-desc,
+        body.light-mode .dash-title,
+        body.light-mode .sidebar-logo {
+            color: var(--text) !important;
+        }
+        /* Theme toggle button in light mode */
+        
+        body.light-mode #theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.95) !important;
+            color: #0d1b4b !important;
+            box-shadow: 0 6px 18px rgba(13, 27, 75, 0.06);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--dark-bg);
+            color: white;
+        }
+        
+        .dashboard {
+            display: block;
+            min-height: 100vh;
+            background: var(--dark-bg);
+        }
+        /* Splash - AQLVOY Kids block (student page only) */
+        
+        .splash-kids {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.04), rgba(59, 130, 246, 0.03));
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 18px 20px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-start;
+        }
+        
+        .splash-kids-title {
+            font-family: 'Baloo 2', cursive;
+            font-weight: 800;
+            color: #FFFFFF;
+            font-size: 1.25rem;
+            line-height: 1.1;
+        }
+        
+        .splash-kids-desc {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.98rem;
+            margin: 0;
+        }
+        
+        .dash-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 260px;
+            background: var(--card-bg);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 28px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+        
+        .dash-main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 32px 40px;
+        }
+        
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 36px;
+            flex-wrap: wrap;
+        }
+        
+        .dash-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        
+        .stat-card .sc-label {
+            font-size: 0.75rem;
+            color: var(--cyan-400);
+            margin-bottom: 12px;
+        }
+        
+        .stat-card .sc-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: white;
+        }
+        
+        .dash-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+        
+        .dash-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .dash-card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .progress-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        
+        .progress-label {
+            flex: 1;
+            font-size: 0.85rem;
+        }
+        
+        .progress-bar-wrap {
+            position: relative;
+            flex: 2;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            overflow: visible;
+            perspective: 800px;
+        }
+        /* 3D-looking progress bar */
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            transform-origin: left center;
+            transition: width 1s cubic-bezier(.2, .9, .2, 1), box-shadow 0.3s;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45), inset 0 -6px 18px rgba(255, 255, 255, 0.03);
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(90deg, rgba(34, 211, 238, 0.95), rgba(59, 130, 246, 0.95));
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.02));
+            border-radius: 10px 10px 0 0;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+        /* subtle tilt */
+        
+        .progress-bar.animate {
+            animation: tilt 2.2s ease-in-out infinite;
+        }
+        
+        @keyframes tilt {
+            0% {
+                transform: rotateX(6deg);
+            }
+            50% {
+                transform: rotateX(2deg);
+            }
+            100% {
+                transform: rotateX(6deg);
+            }
+        }
+        /* small animated subject icon wrapper */
+        
+        .subject-icon-anim {
+            display: inline-block;
+            vertical-align: middle;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .subject-icon-anim .orbit {
+            transform-origin: 50% 50%;
+            animation: orbit 6s linear infinite;
+        }
+        
+        @keyframes orbit {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        /* header controls */
+        
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-left: auto;
+        }
+        
+        .lang-select,
+        .theme-toggle {
+            background: var(--glass);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        body.light-mode .lang-select,
+        body.light-mode .theme-toggle {
+            border-color: rgba(13, 27, 75, 0.06);
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .activity-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-top: 6px;
+            background: var(--cyan-400);
+        }
+        
+        .activity-text {
+            font-size: 0.85rem;
+        }
+        
+        .activity-time {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .sidebar-logo {
+            font-family: 'Baloo 2', cursive;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 32px;
+        }
+        
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 28px;
+        }
+        
+        .sidebar-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--cyan-500), var(--blue-600));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        
+        .sidebar-uname {
+            font-weight: 600;
+            font-size: 0.88rem;
+        }
+        
+        .sidebar-role {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.88rem;
+            margin-bottom: 4px;
+        }
+        
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+        
+        .sidebar-item.active {
+            background: rgba(6, 182, 212, 0.12);
+            color: var(--cyan-400);
+        }
+        
+        .sidebar-logout {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #ff6b6b;
+            margin-top: 20px;
+        }
+        
+        .sidebar-logout:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+        
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .subject-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-3px);
+            background: #1a1a24;
+        }
+        
+        .subject-card .icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+        
+        .subject-card h3 {
+            font-size: 1rem;
+            color: white;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+        
+        .badge.blue {
+            background: rgba(6, 182, 212, 0.12);
+            color: var(--cyan-400);
+        }
+        
+        .badge.gold {
+            background: rgba(255, 196, 74, 0.12);
+            color: #ffc94a;
+        }
+        
+        .ai-chat {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .ai-chat-header {
+            padding: 16px 20px;
+            background: rgba(6, 182, 212, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 700;
+        }
+        
+        .ai-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .msg-bubble {
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            max-width: 85%;
+        }
+        
+        .msg.bot .msg-bubble {
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .msg.user {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .msg.user .msg-bubble {
+            background: linear-gradient(135deg, var(--cyan-500), var(--blue-600));
+        }
+        
+        .ai-input-row {
+            padding: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 8px;
+        }
+        
+        .ai-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: white;
+            outline: none;
+        }
+        
+        .ai-input:focus {
+            border-color: var(--cyan-500);
+        }
+        
+        .ai-send {
+            width: 38px;
+            height: 38px;
+            background: var(--cyan-500);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .ai-send:hover {
+            background: var(--cyan-400);
+        }
+        
+        .demo-chip {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        
+        .demo-chip:hover {
+            background: var(--cyan-500);
+            border-color: var(--cyan-500);
+        }
+        
+        .dash-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        
+        .dash-table th {
+            text-align: left;
+            padding: 10px 14px;
+            color: rgba(255, 255, 255, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .dash-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .hamburger {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: var(--cyan-500);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+                z-index: 99;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .dash-main {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .hamburger {
+                display: block;
+            }
+            .subjects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .dash-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Fullscreen Kids splash for student page -->
+    <div id="splash" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9999;background:linear-gradient(180deg,#062231 0%,#071225 100%);">
+        <div style="text-align:center;padding:30px 28px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);max-width:720px;width:90%;">
+            <div style="font-family:'Baloo 2',cursive;font-weight:800;color:#fff;font-size:1.6rem;margin-bottom:8px;">AQLVOY Kids — 1–4 sinf uy vazifa yordamchisi</div>
+            <div style="color:rgba(255,255,255,0.95);font-size:1.05rem;">Bolaga tayyor javob bermaydi, tushuntirib yechishga o‘rgatadi.</div>
+        </div>
+    </div>
+
+    <!-- Theme toggle button -->
+    <button id="theme-toggle-btn" aria-label="Toggle theme" title="Toggle theme" style="position:fixed;top:18px;right:18px;z-index:10010;border:none;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.06);color:white;backdrop-filter:blur(6px);cursor:pointer">🌙</button>
+
+
+
+
+    <div class="dashboard">
+        <div class="dash-layout">
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-logo">AQLVOY</div>
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar" id="user-avatar">U</div>
+                    <div>
+                        <div class="sidebar-uname" id="user-name">User</div>
+                        <div class="sidebar-role">🎓 O'quvchi · <span id="user-class">9-sinf</span></div>
+                    </div>
+                </div>
+
+                <div class="sidebar-item active" onclick="showTab('home')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-5v-8H9v8H4a2 2 0 0 1-2-2z"/>
+                    </svg> Bosh sahifa
+                </div>
+
+                <div class="sidebar-item" onclick="showTab('subjects')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg> Fanlar
+                </div>
+
+                <div class="sidebar-item" onclick="showTab('ai')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="8" width="18" height="12" rx="2"/>
+                        <line x1="8" y1="4" x2="10" y2="8"/>
+                        <line x1="16" y1="4" x2="14" y2="8"/>
+                        <circle cx="9" cy="13" r="1.5"/>
+                        <circle cx="15" cy="13" r="1.5"/>
+                        <path d="M10 17h4"/>
+                    </svg> AI Ustoz
+                </div>
+
+                <div class="sidebar-item" onclick="showTab('tasks')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg> Vazifalar
+                </div>
+
+                <div class="sidebar-item" onclick="showTab('rating')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 15v4m-3-1h6"/>
+                        <path d="M8 7h8l2 5-3 3H9L6 12z"/>
+                        <path d="M8 2h8l2 5-3 3H9L6 7z"/>
+                    </svg> Reyting
+                </div>
+
+                <div class="sidebar-logout" onclick="logout()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg> Chiqish
+                </div>
+            </div>
+
+            <main class="dash-main">
+                <button class="hamburger" onclick="toggleSidebar()">☰</button>
+
+                <!-- Home Tab -->
+                <div id="home-tab">
+                    <!-- AQLVOY Kids splash (student page) -->
+                    <div class="splash-kids" role="region" aria-label="AQLVOY Kids">
+                        <div class="splash-kids-title">AQLVOY Kids — 1–4 sinf uy vazifa yordamchisi</div>
+                        <div class="splash-kids-desc">Bolaga tayyor javob bermaydi, tushuntirib yechishga o‘rgatadi.</div>
+                    </div>
+                    <div class="dash-header">
+                        <div class="dash-title">Xush kelibsiz! 👋 <span id="greeting-name"></span></div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="sc-label">Bajarilgan vazifalar</div>
+                            <div class="sc-value">24</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="sc-label">Umumiy ball</div>
+                            <div class="sc-value">1,840</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="sc-label">Streak (kun)</div>
+                            <div class="sc-value">7</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="sc-label">O'rtacha baho</div>
+                            <div class="sc-value">4.7</div>
+                        </div>
+                    </div>
+                    <div class="dash-grid">
+                        <div class="dash-card">
+                            <div class="dash-card-title">Fan bo'yicha progress</div>
+                            <div class="progress-row">
+                                <span class="progress-label">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+            <path d="M5 12h14M12 5l-4 7 4 2 4-2-4-7z"/>
+            <circle cx="12" cy="12" r="10"/>
+        </svg>
+        Matematika
+    </span>
+                                <div class="progress-bar-wrap">
+                                    <div class="progress-bar" style="width:78%"></div>
+                                </div>
+                                <span>78%</span>
+                            </div>
+                            <div class="progress-row">
+                                <span class="progress-label">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+            <circle cx="12" cy="12" r="2"/>
+            <ellipse cx="12" cy="12" rx="7" ry="3" transform="rotate(0 12 12)"/>
+            <ellipse cx="12" cy="12" rx="7" ry="3" transform="rotate(60 12 12)"/>
+            <ellipse cx="12" cy="12" rx="7" ry="3" transform="rotate(120 12 12)"/>
+        </svg>
+        Fizika
+    </span>
+                                <div class="progress-bar-wrap">
+                                    <div class="progress-bar" style="width:62%"></div>
+                                </div>
+                                <span>62%</span>
+                            </div>
+                            <div class="progress-row">
+                                <span class="progress-label">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+            <path d="M12 2L3 22h18L12 2z"/>
+            <line x1="8" y1="15" x2="16" y2="15"/>
+        </svg>
+        Ingliz tili
+    </span>
+                                <div class="progress-bar-wrap">
+                                    <div class="progress-bar" style="width:85%"></div>
+                                </div>
+                                <span>85%</span>
+                            </div>
+                        </div>
+                        <div class="dash-card">
+                            <div class="dash-card-title">Bugungi vazifalar</div>
+                            <div class="activity-item">
+                                <div class="activity-dot"></div>
+                                <div>
+                                    <div class="activity-text">Trigonometriya testi</div>
+                                    <div class="activity-time">Bugun 23:59 gacha</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-dot"></div>
+                                <div>
+                                    <div class="activity-text">Ingliz tili essay</div>
+                                    <div class="activity-time">Ertaga</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subjects Tab -->
+                <div id="subjects-tab" style="display:none">
+                    <!-- Level 1: Subject list -->
+                    <div id="subjects-view">
+                        <div class="dash-header">
+                            <div class="dash-title">📚 Fanlarim &mdash; <span id="grade-label"></span></div>
+                        </div>
+                        <div id="subjects-loading" style="text-align:center;padding:40px;color:var(--muted)">Yuklanmoqda…</div>
+                        <div id="subjects-grid" class="subjects-grid"></div>
+                    </div>
+
+                    <!-- Level 2: Books for a subject -->
+                    <div id="books-view" style="display:none">
+                        <div class="dash-header" style="display:flex;align-items:center;gap:12px">
+                            <button onclick="navTo('subjects')" style="background:none;border:1px solid var(--muted-2);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer">← Fanlar</button>
+                            <div class="dash-title" id="books-title"></div>
+                        </div>
+                        <div id="books-loading" style="text-align:center;padding:40px;color:var(--muted)">Yuklanmoqda…</div>
+                        <div id="books-grid" class="subjects-grid"></div>
+                    </div>
+
+                    <!-- Level 3: Topics for a book -->
+                    <div id="topics-view" style="display:none">
+                        <div class="dash-header" style="display:flex;align-items:center;gap:12px">
+                            <button onclick="navTo('books')" style="background:none;border:1px solid var(--muted-2);color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer">← Kitoblar</button>
+                            <div class="dash-title" id="topics-title"></div>
+                        </div>
+                        <div id="topics-loading" style="text-align:center;padding:40px;color:var(--muted)">Yuklanmoqda…</div>
+                        <div id="topics-list"></div>
+                    </div>
+                </div>
+
+                <!-- AI Tab -->
+                <div id="ai-tab" style="display:none">
+                    <div class="dash-header">
+                        <div class="dash-title">AI Ustoz 🤖</div>
+                    </div>
+                    <div class="dash-card">
+                        <div class="demo-chips" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px">
+                            <button class="demo-chip" onclick="aiChip('Matematika masala yechimini tushuntir')">🧮 Matematika</button>
+                            <button class="demo-chip" onclick="aiChip('Fizika formulalarini izohlang')">⚛️ Fizika</button>
+                            <button class="demo-chip" onclick="aiChip('Ingliz tilida grammar qoidalari')">🇬🇧 Grammar</button>
+                        </div>
+                        <div class="ai-chat">
+                            <div class="ai-chat-header">🤖 AQLVOY AI Ustoz</div>
+                            <div class="ai-messages" id="ai-messages">
+                                <div class="msg bot">
+                                    <div class="msg-bubble">Salom! Men sizning AI ustozingizman. Qaysi fan bo'yicha yordam kerak? 😊</div>
+                                </div>
+                            </div>
+                            <div class="ai-input-row">
+                                <input class="ai-input" id="ai-input" placeholder="Savolingizni yozing...">
+                                <button class="ai-send" onclick="sendAIMessage()">➤</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tasks Tab -->
+                <div id="tasks-tab" style="display:none">
+                    <div class="dash-header">
+                        <div class="dash-title">Vazifalar 📝</div>
+                    </div>
+                    <div class="dash-card">
+                        <table class="dash-table">
+                            <thead>
+                                <tr>
+                                    <th>Vazifa</th>
+                                    <th>Fan</th>
+                                    <th>Muddat</th>
+                                    <th>Holat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Trigonometriya #12</td>
+                                    <td>Matematika</td>
+                                    <td>Bugun</td>
+                                    <td><span class="badge blue">Jarayonda</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Essay: My hobby</td>
+                                    <td>Ingliz tili</td>
+                                    <td>Ertaga</td>
+                                    <td><span class="badge gold">Kutilmoqda</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Laboratoriya ishi #4</td>
+                                    <td>Fizika</td>
+                                    <td>2 kun</td>
+                                    <td><span class="badge blue">Jarayonda</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Rating Tab -->
+                <div id="rating-tab" style="display:none">
+                    <div class="dash-header">
+                        <div class="dash-title">Reyting 🏆</div>
+                    </div>
+                    <div class="dash-card">
+                        <table class="dash-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>O'quvchi</th>
+                                    <th>Ball</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Bobur Toshmatov</td>
+                                    <td>2,340</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Nilufar Ergasheva</td>
+                                    <td>2,180</td>
+                                </tr>
+                                <tr style="background:rgba(6,182,212,0.1)">
+                                    <td>3</td>
+                                    <td><strong>Siz</strong></td>
+                                    <td><strong>1,840</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Kamola Tursunova</td>
+                                    <td>1,720</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Splash auto-hide (student page)
+        setTimeout(() => {
+            const s = document.getElementById('splash');
+            if (s) {
+                s.classList.add('out');
+                // smooth fade via CSS transition (fallback) then remove from flow
+                s.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                s.style.opacity = '0';
+                s.style.transform = 'translateY(-12px)';
+                setTimeout(() => s.remove(), 700);
+            }
+        }, 2200);
+
+        // Load user data
+        const userName    = localStorage.getItem('userName')     || 'O\'quvchi';
+        const studentGrade = parseInt(localStorage.getItem('studentGrade') || '0', 10);
+        const gradeLabel  = studentGrade ? studentGrade + '-sinf' : 'O\'quvchi';
+        document.getElementById('user-name').textContent     = userName.split(' ')[0];
+        document.getElementById('user-avatar').textContent   = (userName[0] || 'O').toUpperCase();
+        document.getElementById('user-class').textContent    = gradeLabel;
+        document.getElementById('greeting-name').textContent = userName.split(' ')[0];
+        document.getElementById('grade-label').textContent   = gradeLabel;
+
+        let _subjectsLoaded = false;
+
+        function showTab(tab) {
+            document.querySelectorAll('[id$="-tab"]').forEach(el => el.style.display = 'none');
+            document.getElementById(tab + '-tab').style.display = 'block';
+
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            const tabMap = { 'home': 0, 'subjects': 1, 'ai': 2, 'tasks': 3, 'rating': 4 };
+            sidebarItems.forEach((item, i) => item.classList.toggle('active', i === tabMap[tab]));
+
+            if (tab === 'subjects' && !_subjectsLoaded) {
+                _subjectsLoaded = true;
+                loadSubjects();
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function logout() {
+            window.location.href = '/';
+        }
+
+        // ── Subjects / Books / Topics drill-down ─────────────────────────
+        const CARD_COLORS = ['#10b981','#3b82f6','#ef4444','#8b5cf6','#f97316','#14b8a6','#eab308','#ec4899'];
+        let _currentSubjectSlug = '';
+        let _currentSubjectName = '';
+        let _currentBookId      = 0;
+
+        function navTo(level) {
+            document.getElementById('subjects-view').style.display = level === 'subjects' ? '' : 'none';
+            document.getElementById('books-view').style.display    = level === 'books'    ? '' : 'none';
+            document.getElementById('topics-view').style.display   = level === 'topics'   ? '' : 'none';
+        }
+
+        async function loadSubjects() {
+            const grade = studentGrade;
+            const grid  = document.getElementById('subjects-grid');
+            const load  = document.getElementById('subjects-loading');
+            grid.innerHTML = '';
+            load.style.display = '';
+            navTo('subjects');
+
+            try {
+                const url = grade ? `/api/v1/content/subjects/?grade=${grade}` : '/api/v1/content/subjects/';
+                const res = await apiRequest(url);
+                load.style.display = 'none';
+                if (!res.subjects || res.subjects.length === 0) {
+                    grid.innerHTML = '<p style="color:var(--muted);padding:20px">Hozircha fan mavjud emas.</p>';
+                    return;
+                }
+                res.subjects.forEach((subj, i) => {
+                    const color = CARD_COLORS[i % CARD_COLORS.length];
+                    const card  = document.createElement('div');
+                    card.className = 'subject-card';
+                    card.innerHTML = `<div class="icon" style="font-size:2rem">${subj.icon || '📖'}</div><h3>${escapeHtml(subj.name)}</h3>`;
+                    card.onclick   = () => loadBooks(subj.slug, subj.name, color);
+                    card.style.borderTop = `3px solid ${color}`;
+                    grid.appendChild(card);
+                });
+            } catch (e) {
+                load.style.display = 'none';
+                grid.innerHTML = `<p style="color:#ef4444;padding:20px">Xatolik: ${escapeHtml(e.message)}</p>`;
+            }
+        }
+
+        async function loadBooks(subjectSlug, subjectName, color) {
+            _currentSubjectSlug = subjectSlug;
+            _currentSubjectName = subjectName;
+            document.getElementById('books-title').textContent = subjectName;
+            const grid = document.getElementById('books-grid');
+            const load = document.getElementById('books-loading');
+            grid.innerHTML = '';
+            load.style.display = '';
+            navTo('books');
+
+            try {
+                const grade = studentGrade;
+                const url   = `/api/v1/content/books/?subject=${encodeURIComponent(subjectSlug)}${grade ? '&grade=' + grade : ''}`;
+                const res   = await apiRequest(url);
+                load.style.display = 'none';
+                if (!res.books || res.books.length === 0) {
+                    grid.innerHTML = '<p style="color:var(--muted);padding:20px">Bu fan uchun kitob topilmadi.</p>';
+                    return;
+                }
+                res.books.forEach(book => {
+                    const card = document.createElement('div');
+                    card.className = 'subject-card';
+                    card.style.borderTop = `3px solid ${color || '#06b6d4'}`;
+                    card.innerHTML = `
+                        <div class="icon" style="font-size:2rem">📗</div>
+                        <h3>${escapeHtml(book.title)}</h3>
+                        <small style="color:var(--muted)">${book.grade}-sinf</small>`;
+                    card.onclick = () => loadTopics(book.id, book.title);
+                    grid.appendChild(card);
+                });
+            } catch (e) {
+                load.style.display = 'none';
+                grid.innerHTML = `<p style="color:#ef4444;padding:20px">Xatolik: ${escapeHtml(e.message)}</p>`;
+            }
+        }
+
+        async function loadTopics(bookId, bookTitle) {
+            _currentBookId = bookId;
+            document.getElementById('topics-title').textContent = bookTitle;
+            const list = document.getElementById('topics-list');
+            const load = document.getElementById('topics-loading');
+            list.innerHTML = '';
+            load.style.display = '';
+            navTo('topics');
+
+            try {
+                const res = await apiRequest(`/api/v1/content/books/${bookId}/`);
+                load.style.display = 'none';
+                if (!res.topics || res.topics.length === 0) {
+                    list.innerHTML = '<p style="color:var(--muted);padding:20px">Mavzular hali qo\'shilmagan.</p>';
+                    return;
+                }
+                res.topics.forEach(topic => {
+                    const row = document.createElement('div');
+                    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-radius:12px;margin-bottom:10px;background:var(--card);border:1px solid var(--muted-2);cursor:pointer;transition:border-color .2s';
+                    row.onmouseenter = () => row.style.borderColor = 'var(--accent)';
+                    row.onmouseleave = () => row.style.borderColor = 'var(--muted-2)';
+                    row.innerHTML = `
+                        <div>
+                            <div style="font-weight:700;color:var(--text)">${escapeHtml(topic.title)}</div>
+                            <div style="font-size:0.82rem;color:var(--muted);margin-top:3px">${topic.task_count} ta topshiriq</div>
+                        </div>
+                        <div style="display:flex;gap:8px">
+                            <button onclick="aiChip('${escapeHtml(topic.title)} mavzusini tushuntir')" style="padding:6px 14px;border-radius:8px;border:1px solid var(--accent);background:none;color:var(--accent);cursor:pointer;font-size:0.85rem">🤖 AI</button>
+                        </div>`;
+                    list.appendChild(row);
+                });
+            } catch (e) {
+                load.style.display = 'none';
+                list.innerHTML = `<p style="color:#ef4444;padding:20px">Xatolik: ${escapeHtml(e.message)}</p>`;
+            }
+        }
+
+        // Load subjects when the Subjects tab is opened
+        const _origShowTab = typeof showTab === 'function' ? showTab : null;
+
+        // ── AI Chat ───────────────────────────────────────────────────────
+        function aiChip(text) {
+            showTab('ai');
+            setTimeout(() => {
+                document.getElementById('ai-input').value = text;
+                sendAIMessage();
+            }, 100);
+        }
+
+        async function sendAIMessage() {
+            const input = document.getElementById('ai-input');
+            const val   = input.value.trim();
+            if (!val) return;
+            input.value = '';
+            const msgs = document.getElementById('ai-messages');
+            msgs.innerHTML += `<div class="msg user"><div class="msg-bubble">${escapeHtml(val)}</div></div>`;
+            msgs.scrollTop  = msgs.scrollHeight;
+            msgs.innerHTML += `<div class="msg bot" id="typing-msg"><div class="msg-bubble" style="opacity:0.6">Yozmoqda…</div></div>`;
+            msgs.scrollTop  = msgs.scrollHeight;
+
+            try {
+                const body = { message: val };
+                const res  = await apiRequest('/api/v1/ai-chat/chat/', {
+                    method: 'POST',
+                    body:   JSON.stringify(body),
+                });
+                document.getElementById('typing-msg')?.remove();
+                msgs.innerHTML += `<div class="msg bot"><div class="msg-bubble">${escapeHtml(res.reply || 'Javob yo\'q')}</div></div>`;
+                if (res.audio_url) {
+                    new Audio(res.audio_url).play().catch(() => {});
+                }
+            } catch (err) {
+                document.getElementById('typing-msg')?.remove();
+                msgs.innerHTML += `<div class="msg bot"><div class="msg-bubble" style="color:#ef4444">Xatolik: ${escapeHtml(err.message)}</div></div>`;
+            }
+            msgs.scrollTop = msgs.scrollHeight;
+        }
+
+function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Attach a proper Enter-key handler to the AI input (avoid relying on implicit `event`)
+        document.getElementById('ai-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') sendAIMessage();
+        });
+
+        // Initialize
+        showTab('home');
+
+        // Theme handling: initialize from localStorage and wire the toggle button
+        (function() {
+            const btn = document.getElementById('theme-toggle-btn');
+            const preferred = localStorage.getItem('aqlvoy-theme');
+
+            function applyTheme(theme) {
+                if (theme === 'light') {
+                    document.body.classList.add('light-mode');
+                    if (btn) btn.textContent = '☀️';
+                } else {
+                    document.body.classList.remove('light-mode');
+                    if (btn) btn.textContent = '🌙';
+                }
+            }
+            // apply stored or system preference
+            if (preferred) {
+                applyTheme(preferred);
+            } else {
+                const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+                applyTheme(prefersLight ? 'light' : 'dark');
+            }
+
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    const isLight = document.body.classList.toggle('light-mode');
+                    const theme = isLight ? 'light' : 'dark';
+                    localStorage.setItem('aqlvoy-theme', theme);
+                    applyTheme(theme);
+                });
+            }
+        })();
+    </script>
+    <script src="{% static 'js/app-api.js' %}"></script>
+</body>
+
+</html>

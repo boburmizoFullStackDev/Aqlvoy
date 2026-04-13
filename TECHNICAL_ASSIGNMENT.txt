@@ -1,0 +1,541 @@
+================================================================================
+                    TECHNICAL ASSIGNMENT DOCUMENT
+                          AQLVOY PROJECT
+================================================================================
+
+PROJECT NAME: AQLVOY - "Sening aqlli ustozing!" (Your Smart Tutor)
+An AI-powered education platform built in Uzbek language for students, teachers, 
+and parents to enhance learning through artificial intelligence.
+
+================================================================================
+1. PROJECT OVERVIEW
+================================================================================
+
+AQLVOY is a full-stack web application designed to provide intelligent tutoring
+services through an AI chatbot interface. The platform supports three different
+user roles (Student, Teacher, Parent) with dedicated dashboards and personalized
+learning experiences.
+
+Language: Uzbek (O'zbek tili)
+Platform: Web-based (responsive design for desktop and mobile)
+Status: Development with Django development server running
+
+================================================================================
+2. BACKEND TECHNOLOGY STACK
+================================================================================
+
+Framework:
+  - Django 6.0.4 (Python web framework)
+  - Python 3.x (Language)
+  
+Database:
+  - SQLite3 (db.sqlite3) - Lightweight relational database for development
+  
+Web Server:
+  - Django Development Server (built-in for development)
+  - WSGI Application (core/wsgi.py)
+  - ASGI Support (core/asgi.py)
+  
+Key Python Packages:
+  - asgiref 3.11.1 (ASGI utilities and async support)
+  - sqlparse 0.5.5 (SQL parser and formatter)
+  - tzdata 2026.1 (Timezone database)
+
+Backend Structure:
+  Project Name: core (main Django project configuration)
+  Main App: main (handles views and URL routing)
+  
+Core Modules:
+  - core/settings.py - Django configuration, installed apps, database settings
+  - core/urls.py - URL routing configuration
+  - core/wsgi.py - WSGI application entry point
+  - core/asgi.py - ASGI application entry point
+  - main/views.py - View handlers for rendering templates
+  - main/urls.py - URL patterns for the main app
+  - main/models.py - Database models (currently minimal structure)
+  - main/admin.py - Django admin configuration (empty/basic)
+
+Database Configuration:
+  ENGINE: django.db.backends.sqlite3
+  NAME: db.sqlite3 (in project root)
+
+Installed Django Apps:
+  - django.contrib.admin - Admin interface
+  - django.contrib.auth - Authentication system
+  - django.contrib.contenttypes - Content type framework
+  - django.contrib.sessions - Session framework
+  - django.contrib.messages - Messaging framework
+  - django.contrib.staticfiles - Static file serving
+  - main - Custom main application
+
+================================================================================
+3. FRONTEND TECHNOLOGY STACK
+================================================================================
+
+Markup Language:
+  - HTML5 (responsive, semantic structure)
+
+Styling:
+  - CSS3 (custom stylesheet: style.css)
+  - Features:
+    * Advanced CSS animations (splash screen, floating elements)
+    * CSS Grid and Flexbox for responsive layouts
+    * CSS Variables for theming (--cyan-400, --cyan-500, --blue-600, etc.)
+    * 3D transform effects (rotations, scaling, translations)
+    * Backdrop filters (blur effects)
+    * Linear and radial gradients
+    * Media queries for mobile responsiveness
+    * Shadow effects for depth perception
+
+JavaScript:
+  - Vanilla JavaScript (ES6+)
+  - No external JavaScript frameworks (jQuery, React, Vue not used)
+  - Key Features:
+    * DOM manipulation and event handling
+    * Local Storage for session persistence
+    * Fetch API for asynchronous HTTP requests
+    * Scroll animation and reveal effects
+    * Dynamic content rendering
+    * Form validation and submission
+
+Third-party Libraries:
+  - Google Fonts (Nunito, Baloo 2 font families)
+  - No CDN dependencies (fully custom implementation)
+
+Static Files Served:
+  - Location: /static/ directory
+  - Subdirectories:
+    * /static/css/ - Stylesheet files
+    * /static/js/ - JavaScript files (script.js, app-api.js)
+    * /static/images/ - Image assets (image.png, matnli.png)
+
+================================================================================
+4. PROJECT DIRECTORY STRUCTURE
+================================================================================
+
+d:\Loyihalar\Aqlvoy/
+├── manage.py                    # Django management script
+├── db.sqlite3                   # SQLite database
+├── README.md                    # Project documentation
+├── LICENSE                      # Project license
+│
+├── core/                        # Main Django project settings
+│   ├── __init__.py
+│   ├── settings.py              # Django configuration
+│   ├── urls.py                  # Root URL routing
+│   ├── asgi.py                  # ASGI entry point
+│   └── wsgi.py                  # WSGI entry point
+│
+├── main/                        # Main application
+│   ├── __init__.py
+│   ├── admin.py                 # Admin customization
+│   ├── apps.py                  # App configuration
+│   ├── models.py                # Database models
+│   ├── views.py                 # View handlers
+│   ├── urls.py                  # App URL routing
+│   ├── tests.py                 # Test cases
+│   └── migrations/              # Database migrations
+│       └── __init__.py
+│
+├── templates/                   # Django templates directory
+│   ├── index.html               # Home page (landing page)
+│   ├── login.html               # Login/Authentication page
+│   ├── register.html            # Registration/Onboarding page
+│   ├── student.html             # Student dashboard
+│   ├── teacher.html             # Teacher dashboard
+│   ├── parent.html              # Parent dashboard
+│   └── svg-selector.html        # Utility page for SVG selection
+│
+├── static/                      # Static files for development
+│   ├── css/
+│   │   └── style.css            # Main stylesheet
+│   ├── js/
+│   │   ├── script.js            # Main JavaScript logic
+│   │   └── app-api.js           # API request handlers
+│   └── images/
+│       ├── image.png            # AQLVOY logo (main)
+│       └── matnli.png           # Additional branding image
+│
+├── frontend/                    # Original frontend files (source)
+│   ├── index.html
+│   ├── login.html
+│   ├── register.html
+│   ├── teacher.html
+│   ├── parent.html
+│   ├── student.html
+│   ├── svg-selector.html
+│   ├── style.css
+│   ├── script.js
+│   ├── app-api.js
+│   ├── image.png
+│   └── matnli.png
+│
+└── env/                         # Python virtual environment
+    ├── Scripts/                 # Executable scripts (Activate.ps1, etc.)
+    ├── Lib/                     # Python packages
+    │   └── site-packages/       # Installed dependencies
+    └── pyvenv.cfg
+
+================================================================================
+5. HOMEPAGE (index.html) - CONTENT BREAKDOWN
+================================================================================
+
+The landing page is a modern, interactive marketing website showcasing the 
+AQLVOY AI tutoring platform. Key sections include:
+
+A. Navigation Bar (id="navbar")
+   - Logo: AQLVOY with animated styling
+   - Navigation Links:
+     * Imkoniyatlar (Features)
+     * Fanlar (Subjects)
+     * Demo (Live demonstration)
+     * Savol-Javob (FAQ - Frequently Asked Questions)
+   - Authentication Buttons:
+     * Kirish (Login)
+     * Boshlash (Get Started/Register)
+   - Mobile hamburger menu for responsive navigation
+
+B. Hero Section (id="hero")
+   - eye-catching headline: "AQLVOY — Sening aqlli ustozing!" 
+     (AQLVOY - Your Smart Tutor!)
+   - Hero badge: "⭐ Sun'iy intellekt bilan o'rganish" (Learning with AI)
+   - Main tagline: "Sun'iy intellekt yordamida murakkab mavzularni sodda 
+     tushun, test ishlashni mashq qil va xatolaringni tahlil qil."
+     (Understand complex topics simply with AI, practice tests, analyze errors)
+   - Call-to-action buttons:
+     * Primary: "Boshlash" (Get Started) - links to registration
+     * Secondary: "Demo ko'rish" (View Demo) - scrolls to demo section
+   - Hero Tags highlighting key features:
+     * 24/7 AI Ustoz (24/7 AI Tutor)
+     * O'zbek tilida (In Uzbek language)
+     * Shaxsiy reja (Personal plan)
+   - Hero Image: 
+     * Animated AI robot/logo with floating animation
+     * Decorative rings and glow effects
+   - Background:
+     * 3D animated globe effects
+     * Gradient orbs (cyan and purple)
+     * Dynamic, flowing background animations
+
+C. Features Section (id="ai-features")
+   - Badge: "✨ Imkoniyatlar" (Capabilities)
+   - Title: "AI kuchli imkoniyatlari" (Powerful AI Capabilities)
+   - Three Feature Cards:
+     1. "Aqlli tushuntirish" (Smart Explanations)
+        Description: Explains any topic at your comprehension level
+        Icon: Brain symbol
+     2. "Tezkor javob" (Fast Responses)
+        Description: Get accurate answers to your questions in seconds
+        Icon: Lightning bolt
+     3. "Progress kuzatuv" (Progress Tracking)
+        Description: Track your growth and identify weak areas
+        Icon: Chart/graph
+   - Interactive Chat Demo:
+     * Shows sample conversation with AI
+     * Example: Solving quadratic equations
+     * Demonstrates AI response quality and Uzbek language support
+     * Interactive input field for user engagement
+
+D. Subjects Section (id="subjects")
+   - Displays available learning subjects
+   - Currently demonstrates support for multiple academic subjects
+
+E. Demo Section (id="demo")
+   - Practical demonstration of platform features
+   - Shows live chat interaction examples
+
+F. FAQ Section (id="faq")
+   - Savol-Javob (Questions and Answers)
+   - Addresses common user concerns
+   - Responsive accordion-style Q&A
+
+G. Footer Section
+   - Company branding and logo
+   - Navigation links
+   - Social links (Telegram bot mentioned)
+   - Copyright notice: "© 2026 AQLVOY. Barcha huquqlar himoyalangan."
+     (© 2026 AQLVOY. All rights reserved.)
+   - Contact information
+
+Visual Design Features:
+  - Color Scheme:
+    * Primary: Cyan (#06b6d4, #22d3ee)
+    * Secondary: Blue (#2563eb, #0891b2)
+    * Accent: Purple (#8b5cf6, #a78bfa)
+    * Gold gradient for AQLVOY branding
+    * Dark background (#0f172a, #0c4a6e)
+  
+  - Animations:
+    * Splash screen with fade-out effect
+    * Floating AI logo animation
+    * Scroll reveal animations for card elements
+    * Navbar background change on scroll
+    * Pulsing gradient orbs in background
+    * Typing cursor animation
+    * Blinking elements
+  
+  - Typography:
+    * Fonts: Nunito (body), Baloo 2 (headings)
+    * Responsive font sizing
+    * Text gradients for emphasis
+    * Text shadows for readability on complex backgrounds
+  
+  - Responsive Design:
+    * Breakpoints for mobile (max-width: 640px), tablet, desktop
+    * Mobile-first approach
+    * Hamburger menu for mobile navigation
+
+================================================================================
+6. AUTHENTICATION SYSTEM
+================================================================================
+
+User Roles Supported:
+  1. Student (Talaba)
+     - Dashboard: student.html
+     - Features: Take tests, learn subjects, track progress
+     - Data stored: studentClass
+  
+  2. Teacher (O'qituvchi)
+     - Dashboard: teacher.html
+     - Features: Manage lessons, track student progress
+     - Data stored: teacherSubject, teacherExp (experience)
+  
+  3. Parent (Ota-ona)
+     - Dashboard: parent.html
+     - Features: Monitor child's learning progress
+     - Data stored: childName, childClass
+
+Authentication Flow:
+  - Registration page: register.html (multi-step form)
+  - Login page: login.html (email/username authentication)
+  - Session persistence: Local Storage
+  - Session data includes:
+    * userName (user's name)
+    * userEmail (email address)
+    * selectedRole (student/teacher/parent)
+    * role-specific data (studentClass, teacherSubject, etc.)
+
+================================================================================
+7. API INTEGRATION (Backend Communication)
+================================================================================
+
+API Handler: app-api.js
+
+Key Functions:
+  - apiRequest(path, options)
+    * Handles all HTTP requests to backend
+    * Base URL: window.location.origin (dynamic)
+    * Content-Type: application/json
+    * Error handling with user-friendly messages
+  
+  - persistUserSession(user)
+    * Saves user data to localStorage
+    * Stores role-specific information
+    * Maintains session across page refreshes
+  
+  - routeForRole(role)
+    * Returns appropriate dashboard page based on user role
+    * student → student.html
+    * teacher → teacher.html
+    * parent → parent.html
+  
+  - currentUserEmail(fallback)
+    * Retrieves user's email from localStorage
+    * Returns fallback value if not found
+
+Expected Backend Endpoints (to be implemented):
+  - POST /login - User authentication
+  - POST /register - New user registration
+  - GET /user/profile - Get user information
+  - POST /logout - End user session
+  - POST /chat - Send message to AI
+  - GET /progress - Retrieve learning progress
+  - POST /tests/submit - Submit test answers
+
+================================================================================
+8. CURRENT DEVELOPMENT STATUS
+================================================================================
+
+Completed:
+  ✓ Frontend UI/UX design and implementation
+  ✓ Responsive layout for all pages
+  ✓ Advanced CSS animations and effects
+  ✓ JavaScript event handling and DOM manipulation
+  ✓ Static file organization and serving configuration
+  ✓ Django project structure and configuration
+  ✓ URL routing setup
+  ✓ Templates directory configured
+  ✓ Database integration (SQLite)
+  ✓ Development server running successfully
+  ✓ Landing page fully functional
+  ✓ Login/Register pages designed
+  ✓ Dashboard pages created (student, teacher, parent)
+
+In Progress / To Do:
+  - Implement user authentication views and models
+  - Create database models for users, lessons, progress tracking
+  - Implement AI chat API integration
+  - Build API endpoints for authentication
+  - Create teacher/student/parent dashboard functionality
+  - Implement progress tracking system
+  - Set up admin panel for content management
+  - Add automated testing
+  - Performance optimization
+  - Security hardening (CSRF tokens, password hashing, etc.)
+  - Production deployment configuration
+
+================================================================================
+9. BROWSER COMPATIBILITY
+================================================================================
+
+Tested/Expected Support:
+  - Chrome/Chromium (latest versions)
+  - Firefox (latest versions)
+  - Safari (latest versions)
+  - Edge (latest versions)
+  - Mobile browsers (iOS Safari, Chrome Mobile)
+
+JavaScript Features Used:
+  - ES6+ syntax (arrow functions, template literals, destructuring)
+  - Fetch API (modern async/await)
+  - LocalStorage API
+  - CSS Grid and Flexbox
+  - CSS Custom Properties (variables)
+  - Modern CSS animations and filters
+
+Graceful Degradation:
+  - Forms work without JavaScript (basic functionality)
+  - Images have fallback display properties
+  - SVG fallbacks for icons
+
+================================================================================
+10. PERFORMANCE CONSIDERATIONS
+================================================================================
+
+Current Optimizations:
+  - Minimal external dependencies
+  - Vanilla JavaScript (no heavy frameworks)
+  - CSS animations using GPU-accelerated properties (transform, opacity)
+  - Lazy loading for off-screen elements
+  - Mobile-first responsive design
+
+Potential Improvements:
+  - Image compression and webp format support
+  - CSS and JavaScript minification for production
+  - Static file caching strategies
+  - Database query optimization
+  - Implement pagination for large datasets
+  - Frontend code splitting
+  - Service Worker for offline support
+  - CDN integration for static assets
+
+================================================================================
+11. SECURITY CONSIDERATIONS
+================================================================================
+
+Current Implementation:
+  - Django security middleware enabled
+  - CSRF protection framework configured
+  - Authentication system framework ready
+  - Session management via Django sessions
+
+To Implement:
+  - Password hashing (Django's built-in bcrypt/PBKDF2)
+  - SQL injection prevention (Django ORM)
+  - XSS protection (templates auto-escaping)
+  - HTTPS enforcement in production
+  - API rate limiting
+  - Input validation and sanitization
+  - Secure headers configuration
+  - Secret key environment variables (not hardcoded)
+
+================================================================================
+12. DEPLOYMENT REQUIREMENTS
+================================================================================
+
+For Development:
+  - Python 3.x
+  - Virtual environment (env/)
+  - Dependencies in site-packages installed
+  - Django development server
+
+For Production:
+  - Production WSGI server (Gunicorn, uWSGI)
+  - Reverse proxy (Nginx, Apache)
+  - PostgreSQL or similar production database
+  - SSL/TLS certificate
+  - Environment-based configuration
+  - Logging and monitoring setup
+  - Backup and disaster recovery plan
+  - Docker containerization (recommended)
+
+Running the Development Server:
+  1. Activate virtual environment:
+     & d:\Loyihalar\Aqlvoy\env\Scripts\Activate.ps1
+  
+  2. Run development server:
+     python manage.py runserver
+  
+  3. Access at: http://127.0.0.1:8000/
+  
+  4. Important management commands:
+     - python manage.py migrate (apply database migrations)
+     - python manage.py createsuperuser (create admin user)
+     - python manage.py collectstatic (collect static files for production)
+
+================================================================================
+13. TESTING STRATEGY
+================================================================================
+
+To be implemented:
+  - Unit tests for Django views and models
+  - Integration tests for API endpoints
+  - Frontend JavaScript tests (Jest or Mocha)
+  - End-to-end tests for user workflows (Selenium, Cypress)
+  - Load testing for scalability verification
+  - Security testing (OWASP Top 10)
+
+================================================================================
+14. FUTURE ENHANCEMENTS
+================================================================================
+
+Planned Features:
+  - Real AI integration (OpenAI API, Google Gemini, etc.)
+  - Video tutorials and interactive lessons
+  - Multiplayer quiz competitions
+  - Teacher content management system
+  - Advanced analytics and reporting
+  - Mobile app (React Native, Flutter)
+  - Machine learning for personalized recommendations
+  - Gamification (badges, leaderboards)
+  - Integration with school management systems
+  - Multilingual support (currently Uzbek only)
+  - Virtual classroom with video conferencing
+  - Payment integration for premium features
+
+================================================================================
+15. PROJECT CONTACT & DOCUMENTATION
+================================================================================
+
+Language: Uzbek (O'zbek tili)
+Primary Platform: Web (Responsive)
+Development Framework: Django + Vanilla JavaScript
+Database: SQLite (development), PostgreSQL (production)
+Version Control: Git (assumed)
+
+Key Files for Reference:
+  - core/settings.py (Django configuration)
+  - templates/index.html (Main landing page)
+  - static/css/style.css (Styling)
+  - static/js/script.js (Main logic)
+  - static/js/app-api.js (API communication)
+  - main/views.py (Backend views)
+
+================================================================================
+                              END OF DOCUMENT
+================================================================================
+
+Generated: April 12, 2026
+Project Name: AQLVOY - Sening aqlli ustozing! (Your Smart Tutor)
+Document Type: Technical Assignment
+Status: Current Development Status

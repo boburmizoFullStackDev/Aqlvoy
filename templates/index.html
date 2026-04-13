@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQLVOY — Sening aqlli ustozing! | AI ta'lim platformasi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* Qo'shimcha stillar */
+        
+        .hero-logo {
+            width: 400px;
+            max-width: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 20px 50px rgba(6, 182, 212, 0.4));
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        section {
+            position: relative;
+            z-index: 1;
+            background: transparent;
+            /* Shaffof fon */
+        }
+        
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.1em;
+            background: var(--blue-600);
+            margin-left: 2px;
+            animation: blink 0.8s infinite;
+        }
+        /* SPLASH STYLES: make the landing splash look polished */
+        
+        #splash {
+            position: relative;
+            min-height: 68vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 20px;
+            color: white;
+            overflow: hidden;
+        }
+        
+        #splash .splash-glow {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(6, 182, 212, 0.12), transparent 15%), radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.08), transparent 25%);
+            filter: blur(48px);
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .splash-logo-wrap {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .splash-logo {
+            width: 180px;
+            max-width: 42vw;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 28px 80px rgba(6, 182, 212, 0.18);
+            transform-origin: center;
+            transition: transform 0.9s cubic-bezier(.2, .9, .2, 1), filter 0.4s;
+        }
+        
+        .splash-logo-glow {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -28px;
+            width: 260px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(closest-side, rgba(6, 182, 212, 0.18), rgba(59, 130, 246, 0.04));
+            filter: blur(40px);
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.9;
+        }
+        
+        .splash-title {
+            font-family: 'Baloo 2', cursive;
+            font-weight: 900;
+            font-size: clamp(2rem, 6vw, 3.6rem);
+            margin-top: 18px;
+            z-index: 2;
+            text-align: center;
+            text-shadow: 0 12px 40px rgba(2, 6, 23, 0.65);
+            color: white;
+        }
+        
+        .splash-sub {
+            margin-top: 12px;
+            font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+            color: rgba(255, 255, 255, 0.92);
+            max-width: 880px;
+            text-align: center;
+            z-index: 2;
+            line-height: 1.5;
+        }
+        
+        .splash-bar {
+            margin-top: 22px;
+            width: 120px;
+            height: 8px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #06b6d4, #3b82f6);
+            box-shadow: 0 14px 40px rgba(6, 182, 212, 0.2);
+            z-index: 2;
+        }
+        /* Subtle entrance animation */
+        
+        #splash .splash-logo,
+        #splash .splash-title,
+        #splash .splash-sub,
+        #splash .splash-bar {
+            transform: translateY(8px);
+            opacity: 0;
+            transition: transform 0.9s cubic-bezier(.2, .9, .2, 1), opacity 0.6s ease;
+        }
+        
+        #splash.out .splash-logo,
+        #splash.out .splash-title,
+        #splash.out .splash-sub,
+        #splash.out .splash-bar {
+            transform: translateY(-8px);
+            opacity: 0;
+        }
+        
+        #splash.ready .splash-logo {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+        
+        #splash.ready .splash-title {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        #splash.ready .splash-sub {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        #splash.ready .splash-bar {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        @media (max-width: 640px) {
+            .splash-logo {
+                width: 130px;
+            }
+            .splash-title {
+                font-size: 1.6rem;
+            }
+            .splash-bar {
+                width: 84px;
+                height: 6px;
+            }
+            #splash {
+                padding: 28px 14px;
+                min-height: 56vh;
+            }
+        }
+        /* 3D Background Effects */
+        
+        .bg-3d-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .globe-background {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.15), rgba(6, 182, 212, 0));
+            filter: blur(40px);
+            animation: floatGlobe 20s ease-in-out infinite;
+        }
+        
+        .globe-1 {
+            width: 500px;
+            height: 500px;
+            top: -200px;
+            right: -150px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.25), rgba(59, 130, 246, 0.1));
+            animation-delay: 0s;
+        }
+        
+        .globe-2 {
+            width: 600px;
+            height: 600px;
+            bottom: -250px;
+            left: -200px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2), rgba(6, 182, 212, 0.05));
+            animation-delay: -5s;
+        }
+        
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            animation: pulseOrb 8s ease-in-out infinite;
+        }
+        
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            top: 30%;
+            left: 10%;
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            animation-delay: 0s;
+        }
+        
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            bottom: 20%;
+            right: 5%;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            animation-delay: -4s;
+        }
+        
+        @keyframes floatGlobe {
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(30px, -30px) rotate(5deg);
+            }
+            50% {
+                transform: translate(-20px, 20px) rotate(-5deg);
+            }
+            75% {
+                transform: translate(20px, 30px) rotate(3deg);
+            }
+        }
+        
+        @keyframes pulseOrb {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.6;
+            }
+        }
+        /* Responsive */
+        
+        @media (max-width: 768px) {
+            .globe-1 {
+                width: 300px;
+                height: 300px;
+                top: -100px;
+                right: -100px;
+            }
+            .globe-2 {
+                width: 350px;
+                height: 350px;
+                bottom: -150px;
+                left: -100px;
+            }
+            .orb-1,
+            .orb-2 {
+                display: none;
+            }
+        }
+        
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        /* (Removed splash-kids styles from index.html so the Kids splash appears only on student.html) */
+    </style>
+</head>
+
+<body>
+    <div class="bg-3d-effects">
+        <div class="globe-background globe-1"></div>
+        <div class="globe-background globe-2"></div>
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+    </div>
+    <!-- Local 3D background for splash (subtle) -->
+    <div class="section-bg-3d splash-bg" aria-hidden="true">
+        <div class="globe-background globe-1"></div>
+        <div class="gradient-orb orb-1"></div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav id="navbar">
+        <a class="nav-logo" href="#" onclick="scrollToSection('hero');return false;">
+            <img src="{% static 'images/image.png' %}" alt="AQLVOY" />
+            <!--<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2306b6d4'/%3E%3Ctext x='50' y='67' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3EA%3C/text%3E%3C/svg%3E">-->
+            <span class="nav-logo-text"><span style="color:var(--cyan-400)">AQL</span>VOY</span>
+        </a>
+        <ul class="nav-links">
+            <li><button onclick="scrollToSection('ai-features')">Imkoniyatlar</button></li>
+            <li><button onclick="scrollToSection('subjects')">Fanlar</button></li>
+            <li><button onclick="scrollToSection('demo')">Demo</button></li>
+            <li><button onclick="scrollToSection('faq')">Savol-Javob</button></li>
+        </ul>
+        <div class="nav-right">
+            <button class="btn-login" onclick="window.location.href='/login/'">Kirish</button>
+            <button class="btn-register" onclick="window.location.href='/register/'">Boshlash</button>
+        </div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+    </nav>
+
+    <div id="mobile-menu">
+        <button class="mobile-nav-btn" onclick="scrollToSection('hero');closeMenu()">Bosh sahifa</button>
+        <button class="mobile-nav-btn" onclick="scrollToSection('ai-features');closeMenu()">Imkoniyatlar</button>
+        <button class="mobile-nav-btn" onclick="scrollToSection('subjects');closeMenu()">Fanlar</button>
+        <button class="mobile-nav-btn" onclick="scrollToSection('demo');closeMenu()">Demo</button>
+        <button class="mobile-nav-btn" onclick="scrollToSection('faq');closeMenu()">Savol-Javob</button>
+        <button class="btn-login" onclick="window.location.href='/login/'">Kirish</button>
+        <button class="btn-register" onclick="window.location.href='/register/'">Boshlash 🚀</button>
+    </div>
+
+    <!-- HERO -->
+    <section id="hero">
+        <!-- Local 3D background for hero -->
+        <div class="section-bg-3d hero-bg" aria-hidden="true">
+            <div class="globe-background globe-2"></div>
+            <div class="gradient-orb orb-2"></div>
+        </div>
+        <div class="hero-grid">
+            <div>
+                <div class="hero-badge">⭐ Sun'iy intellekt bilan o'rganish</div>
+                <h1 class="hero-title"><span class="text-gradient-gold">AQLVOY</span> —<br>Sening aqlli<br>ustozing!</h1>
+                <p class="hero-sub">Sun'iy intellekt yordamida murakkab mavzularni sodda tushun, test ishlashni mashq qil va xatolaringni tahlil qil.</p>
+                <div class="hero-btns">
+                    <button class="btn-hero-primary" onclick="window.location.href='/register/'">Boshlash</button>
+                    <button class="btn-hero-secondary" onclick="scrollToSection('demo')">▶ Demo ko'rish</button>
+                </div>
+                <div class="hero-tags">
+                    <div class="hero-tag">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L15 8.5L22 9.5L17 14L18.5 21L12 17.5L5.5 21L7 14L2 9.5L9 8.5L12 2Z" fill="#F59E0B" stroke="#F59E0B" stroke-width="1.5" stroke-linejoin="round"/>
+            <path d="M12 5L14 9.5L19 10L15.5 13L16.5 18L12 15.5L7.5 18L8.5 13L5 10L10 9.5L12 5Z" fill="white" stroke="#F59E0B" stroke-width="1"/>
+        </svg> 24/7 AI Ustoz
+                    </div>
+                    <div class="hero-tag">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="4" width="20" height="16" rx="2" fill="#10B981" stroke="#10B981" stroke-width="1.5"/>
+            <path d="M8 8H16M8 12H14M8 16H12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M19 4L21 7L19 10" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg> O'zbek tilida
+                    </div>
+                    <div class="hero-tag">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 4C7.58 4 4 7.58 4 12C4 16.42 7.58 20 12 20C16.42 20 20 16.42 20 12" stroke="#8B5CF6" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+            <circle cx="12" cy="12" r="2.5" fill="#8B5CF6" stroke="#8B5CF6" stroke-width="1"/>
+            <path d="M15 4L18 2L20 5L17 7L15 4Z" fill="#A78BFA" stroke="#8B5CF6" stroke-width="1"/>
+            <path d="M17 2L19 4.5" stroke="#8B5CF6" stroke-width="1.2" stroke-linecap="round"/>
+        </svg> Shaxsiy reja
+                    </div>
+                </div>
+            </div>
+            <div class="hero-img-wrap">
+                <div class="hero-img-inner">
+                    <div class="hero-ring-1"></div>
+                    <div class="hero-ring-2"></div>
+                    <div class="hero-glow"></div>
+                    <img src="{% static 'images/image.png' %}" class="hero-logo float-anim" alt="Robot AI" />
+                    <!--<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='80' fill='%2306b6d4' opacity='0.3'/%3E%3Ccircle cx='100' cy='100' r='60' fill='%2306b6d4' opacity='0.5'/%3E%3Ctext x='100' y='115' text-anchor='middle' fill='white' font-size='50' font-weight='bold'%3EAI%3C/text%3E%3C/svg%3E" class="hero-logo">-->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <!-- FEATURES - TUZATILGAN VERSIYA -->
+    <section id="ai-features">
+        <div class="features-container">
+            <div class="features-header reveal">
+                <span class="features-badge">✨ Imkoniyatlar</span>
+                <h2 class="features-title">AI <span class="text-gradient">kuchli imkoniyatlari</span></h2>
+                <p class="features-subtitle">AQLVOY sizga eng zamonaviy sun'iy intellekt imkoniyatlarini taqdim etadi</p>
+            </div>
+
+            <div class="features-wrapper">
+                <!-- Chap tomon - Kartalar -->
+                <div class="features-cards">
+                    <div class="feature-card">
+                        <div class="feature-card-icon icon-brain">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        </div>
+                        <div class="feature-card-content">
+                            <h3>Aqlli tushuntirish</h3>
+                            <p>Har qanday mavzuni sizning darajangizga mos tarzda tushuntiradi</p>
+                        </div>
+                        <div class="feature-card-glow"></div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-card-icon icon-bolt">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                            <path d="M13 2L3 14h8l-2 8 10-12h-8l2-8z"/>
+                        </svg>
+                        </div>
+                        <div class="feature-card-content">
+                            <h3>Tezkor javob</h3>
+                            <p>Savollaringizga soniyalar ichida aniq javob olasiz</p>
+                        </div>
+                        <div class="feature-card-glow"></div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-card-icon icon-chart">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                            <path d="M2 12L7 2M22 12L17 2M12 2v20M12 22l3-4M12 22l-3-4"/>
+                        </svg>
+                        </div>
+                        <div class="feature-card-content">
+                            <h3>Progress kuzatuv</h3>
+                            <p>O'sishingizni kuzating, zaif tomonlaringizni aniqlang</p>
+                        </div>
+                        <div class="feature-card-glow"></div>
+                    </div>
+                </div>
+
+                <!-- O'ng tomon - Chat Demo -->
+                <div class="features-chat">
+                    <div class="chat-header">
+                        <div class="chat-avatar">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="10" fill="#06b6d4"/>
+                            <path d="M12 6L14 10L18 10.5L15 13L16 17L12 15L8 17L9 13L6 10.5L10 10L12 6Z" fill="white"/>
+                        </svg>
+                        </div>
+                        <div class="chat-info">
+                            <span class="chat-name">AQLVOY AI</span>
+                            <span class="chat-status">Online</span>
+                        </div>
+                        <div class="chat-dots">
+                            <span>●</span><span>●</span><span>●</span>
+                        </div>
+                    </div>
+                    <div class="chat-messages">
+                        <div class="message-ai">
+                            <div class="message-bubble">
+                                <strong>📐 Kvadrat tenglama</strong><br> Kvadrat tenglamani yechish uchun diskriminantni hisoblaymiz:<br>
+                                <code>D = b² - 4ac</code><br>
+                                <code>D = (-5)² - 4(1)(6) = 1</code><br>
+                                <code>x₁ = 3, x₂ = 2</code>
+                            </div>
+                            <span class="message-time">10:24</span>
+                        </div>
+                        <div class="message-user">
+                            <div class="message-bubble">
+                                Rahmat! Endi tushundim 🎉
+                            </div>
+                            <span class="message-time">10:25</span>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" placeholder="Savolingizni yozing..." class="chat-input">
+                        <button class="chat-send">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Per-section 3D background (used by splash and hero) */
+        
+        .section-bg-3d {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .section-bg-3d .globe-background {
+            filter: blur(40px);
+            opacity: 0.9;
+        }
+        
+        .splash-bg .globe-1 {
+            width: 420px;
+            height: 420px;
+            top: -160px;
+            right: -120px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.22), rgba(59, 130, 246, 0.06));
+        }
+        
+        .splash-bg .orb-1 {
+            width: 240px;
+            height: 240px;
+            top: 20%;
+            left: 6%;
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            opacity: 0.45;
+            filter: blur(48px);
+        }
+        
+        .hero-bg .globe-2 {
+            width: 520px;
+            height: 520px;
+            bottom: -180px;
+            left: -140px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.18), rgba(6, 182, 212, 0.04));
+        }
+        
+        .hero-bg .orb-2 {
+            width: 300px;
+            height: 300px;
+            bottom: 18%;
+            right: 6%;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            opacity: 0.44;
+            filter: blur(56px);
+        }
+        /* Features Section - TUZATILGAN */
+        
+        #ai-features {
+            background: transparent !important;
+            position: relative;
+            z-index: 2;
+            padding: 80px 24px;
+        }
+        
+        .features-container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        
+        .features-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        /* Ensure header and subtitle are highly readable on dark/gradient backgrounds */
+        
+        .features-header,
+        .features-header .features-title {
+            color: #ffffff !important;
+            text-shadow: 0 6px 30px rgba(2, 6, 23, 0.6);
+        }
+        
+        .features-subtitle {
+            color: rgba(0, 0, 0, 0.95) !important;
+            text-shadow: 0 2px 18px rgba(2, 6, 23, 0.45);
+        }
+        
+        .features-badge {
+            display: inline-block;
+            background: rgba(6, 182, 212, 0.15);
+            color: #06b6d4;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+        
+        .features-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            font-family: 'Baloo 2', cursive;
+            margin-bottom: 16px;
+            color: white !important;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent !important;
+        }
+        
+        .features-subtitle {
+            color: rgba(108, 1, 1, 0.7);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .features-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+        /* Feature Cards */
+        
+        .features-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 24px 28px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            box-shadow: 0 8px 30px rgba(2, 6, 23, 0.35);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .feature-card:hover {
+            transform: translateX(8px) translateY(-4px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(6, 182, 212, 0.5);
+        }
+        
+        .feature-card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+        
+        .icon-brain {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+        
+        .icon-bolt {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+        }
+        
+        .icon-chart {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .feature-card-content h3 {
+            font-size: 1.45rem;
+            font-weight: 900;
+            margin-bottom: 6px;
+            color: #2f2f2f !important;
+            text-shadow: 0 2px 12px rgba(6, 182, 212, 0.08);
+        }
+        
+        .feature-card-content p {
+            color: rgba(22, 22, 22, 0.88);
+            font-size: 0.98rem;
+            line-height: 1.45;
+        }
+        
+        .feature-card-glow {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.15), transparent);
+            transition: 0.5s;
+        }
+        
+        .feature-card:hover .feature-card-glow {
+            left: 100%;
+        }
+        /* Chat Card */
+        
+        .features-chat {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .features-chat:hover {
+            transform: translateY(-8px);
+            border-color: rgba(6, 182, 212, 0.4);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+        }
+        
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 24px;
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chat-info {
+            flex: 1;
+        }
+        
+        .chat-name {
+            font-weight: 700;
+            color: white;
+            display: block;
+            font-size: 0.95rem;
+        }
+        
+        .chat-status {
+            font-size: 0.7rem;
+            color: #10b981;
+        }
+        
+        .chat-dots {
+            display: flex;
+            gap: 4px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 8px;
+        }
+        
+        .chat-messages {
+            padding: 20px 24px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .message-ai {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .message-ai .message-bubble {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: white;
+            border-radius: 20px;
+            border-bottom-left-radius: 4px;
+            padding: 14px 18px;
+            max-width: 90%;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .message-user {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        
+        .message-user .message-bubble {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            border-radius: 20px;
+            border-bottom-right-radius: 4px;
+            padding: 12px 18px;
+            max-width: 75%;
+            font-size: 0.9rem;
+        }
+        
+        .message-bubble code {
+            display: block;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 6px 10px;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+        
+        .message-time {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.35);
+            margin-top: 4px;
+            margin-left: 8px;
+        }
+        
+        .chat-input-area {
+            padding: 16px 24px 24px;
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 12px 20px;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        
+        .chat-input:focus {
+            border-color: #06b6d4;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .chat-send {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .chat-send:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+        }
+        /* Responsive */
+        
+        @media (max-width: 900px) {
+            .features-wrapper {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .features-title {
+                font-size: 2rem;
+            }
+            .feature-card {
+                padding: 20px 24px;
+            }
+            .feature-card-icon {
+                width: 48px;
+                height: 48px;
+            }
+            .feature-card-icon svg {
+                width: 26px;
+                height: 26px;
+            }
+            .chat-messages {
+                min-height: 260px;
+            }
+        }
+        
+        @media (max-width: 550px) {
+            .feature-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .message-ai .message-bubble,
+            .message-user .message-bubble {
+                max-width: 95%;
+            }
+            .features-title {
+                font-size: 1.8rem;
+            }
+            #ai-features {
+                padding: 60px 16px;
+            }
+        }
+    </style>
+
+    <!-- SUBJECTS -->
+    <section id="subjects">
+        <div style="max-width:1200px;margin:0 auto">
+            <div class="reveal" style="text-align:center;margin-bottom:80px">
+                <h2 class="section-title" style="color:var(--text-dark)">Barcha asosiy <span class="text-gradient-cyan">fanlar</span></h2>
+            </div>
+            <div class="subjects-grid">
+                <div class="subject-card reveal-scale">
+                    <div class="subject-icon" style="background:#3B82F618;color:#3B82F6;">🧮</div>
+                    <h3>Matematika</h3>
+                </div>
+                <div class="subject-card reveal-scale">
+                    <div class="subject-icon" style="background:#10B98118;color:#10B981;">📖</div>
+                    <h3>Ingliz tili</h3>
+                </div>
+                <div class="subject-card reveal-scale">
+                    <div class="subject-icon" style="background:#8B5CF618;color:#8B5CF6;">💻</div>
+                    <h3>Informatika</h3>
+                </div>
+                <div class="subject-card reveal-scale">
+                    <div class="subject-icon" style="background:#F59E0B18;color:#F59E0B;">⚛️</div>
+                    <h3>Fizika</h3>
+                </div>
+                <div class="subject-card reveal-scale">
+                    <div class="subject-icon" style="background:#EF444418;color:#EF4444;">🧬</div>
+                    <h3>Biologiya</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section id="progress">
+        <div class="stats-grid">
+            <div class="stat-item reveal">
+                <div class="stat-number" data-target="50000">0+</div>
+                <div class="stat-label">Faol o'quvchilar</div>
+            </div>
+            <div class="stat-item reveal">
+                <div class="stat-number" data-target="1000000">0+</div>
+                <div class="stat-label">Javob berildi</div>
+            </div>
+            <div class="stat-item reveal">
+                <div class="stat-number" data-target="49">0/50</div>
+                <div class="stat-label">O'rtacha baho</div>
+            </div>
+            <div class="stat-item reveal">
+                <div class="stat-number" data-target="98">0%</div>
+                <div class="stat-label">Mamnuniyat</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEMO -->
+    <section id="demo">
+        <div class="demo-container">
+            <div class="reveal" style="text-align:center;margin-bottom:60px">
+                <span style="background:#EFF6FF;color:#1D4ED8;padding:8px 20px;border-radius:999px;font-size:0.75rem;font-weight:800">Sinab ko'ring</span>
+                <h2 class="section-title" style="color:var(--text-dark)">AI bilan suhbatlashing</h2>
+            </div>
+            <div class="demo-chips reveal">
+                <button class="demo-chip" onclick="handleChip('Algebra')">📐 Algebra</button>
+                <button class="demo-chip" onclick="handleChip('IELTS')">📖 IELTS</button>
+                <button class="demo-chip" onclick="handleChip('Python')">💻 Python</button>
+                <button class="demo-chip" onclick="handleChip('Fizika')">⚛️ Fizika</button>
+                <button class="demo-chip" onclick="handleChip('Biologiya')">🧬 Biologiya</button>
+            </div>
+            <div class="demo-input-row reveal">
+                <input class="demo-input" id="demo-input" placeholder="Nimani o'rganmoqchisiz?">
+                <button class="demo-btn" id="demo-btn" onclick="runDemo()">So'rash →</button>
+            </div>
+            <div class="demo-output reveal">
+                <p id="demo-output-text">Salom! Men AQLVOY — sizning AI ustozingizman. Sizga yordam berishga tayyorman! 🚀</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+        <div class="faq-wrap">
+            <div class="reveal" style="text-align:center;margin-bottom:64px">
+                <h2 class="section-title">Ko'p so'raladigan savollar</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item reveal"><button class="faq-question" onclick="toggleFaq(this)"><span>AQLVOY bepulmi?</span><span class="faq-chevron">▼</span></button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Ha, AQLVOY ning asosiy imkoniyatlari bepul. Kuniga 10 ta savol bepul berishingiz mumkin.</div>
+                    </div>
+                </div>
+                <div class="faq-item reveal"><button class="faq-question" onclick="toggleFaq(this)"><span>AQLVOY qaysi fanlarni qamrab oladi?</span><span class="faq-chevron">▼</span></button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Matematika, Fizika, Kimyo, Biologiya, Tarix, Ingliz tili, Dasturlash va boshqa ko'plab fanlar.</div>
+                    </div>
+                </div>
+                <div class="faq-item reveal"><button class="faq-question" onclick="toggleFaq(this)"><span>Telegram orqali kirishim mumkinmi?</span><span class="faq-chevron">▼</span></button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Ha! Telegram akkauntingiz orqali bir bosimda ro'yxatdan o'tishingiz mumkin.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta">
+        <div>
+            <h2 style="font-family:'Baloo 2',cursive;font-weight:900;font-size:clamp(2.5rem,5vw,4rem);margin-bottom:32px">Bugunoq <span class="text-gradient-gold">AQLVOY</span> bilan o'rganishni boshlang</h2>
+            <p style="font-size:1.25rem;color:rgba(255,255,255,0.7);margin-bottom:48px">Minglab o'quvchilar allaqachon AQLVOY bilan muvaffaqiyatga erishmoqda. Navbat sizda!</p>
+            <div class="cta-btns">
+                <button class="btn-cta-primary" onclick="window.location.href='/register/'">🚀 Bepul Boshlash</button>
+                <button class="btn-cta-secondary" onclick="window.open('https://t.me/aqlvoyai','_blank')">📱 Telegram kanalimiz</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-brand">
+                    <img src="{% static 'images/image.png' %}" alt="AQLVOY" onerror="this.style.display='none'" />
+                    <!--<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2306b6d4'/%3E%3Ctext x='50' y='67' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3EA%3C/text%3E%3C/svg%3E">-->
+                    <span><span style="color:var(--cyan-400)">AQL</span>VOY</span>
+                </div>
+                <p class="footer-desc">O'zbekiston o'quvchilari uchun sun'iy intellekt asosidagi ta'lim platformasi.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Sahifalar</h4>
+                <ul>
+                    <li><button onclick="scrollToSection('ai-features')">Imkoniyatlar</button></li>
+                    <li><button onclick="scrollToSection('subjects')">Fanlar</button></li>
+                    <li><button onclick="scrollToSection('demo')">Demo</button></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Aloqa</h4>
+                <ul>
+                    <li>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="#3B82F6" stroke-width="1.5" fill="none"/>
+            <path d="M2 12H22M12 2C9.5 4.5 8 8 8 12C8 16 9.5 19.5 12 22C14.5 19.5 16 16 16 12C16 8 14.5 4.5 12 2Z" stroke="#3B82F6" stroke-width="1.5" fill="none"/>
+        </svg> aqlvoyai.uz
+                    </li>
+                    <li>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="4" width="20" height="16" rx="2" stroke="#F59E0B" stroke-width="1.5" fill="none"/>
+            <path d="M22 7L12 13L2 7" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg> info@aqlvoyai.uz
+                    </li>
+                    <li>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" stroke="#06B6D4" stroke-width="1.5" fill="none"/>
+            <circle cx="12" cy="12" r="3" stroke="#06B6D4" stroke-width="1.5" fill="none"/>
+            <path d="M17 7L19 5M5 19L7 17" stroke="#06B6D4" stroke-width="1.5" stroke-linecap="round"/>
+        </svg> t.me/aqlvoyai
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 AQLVOY. Barcha huquqlar himoyalangan.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    <script>
+        // Splash
+        setTimeout(() => {
+            const s = document.getElementById('splash');
+            if (s) {
+                s.classList.add('out');
+                setTimeout(() => s.style.display = 'none', 700);
+            }
+        }, 2200);
+
+        // Scroll navbar
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (nav) nav.classList.toggle('scrolled', window.scrollY > 20);
+            checkReveal();
+            animateStats();
+        });
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        function toggleMenu() {
+            document.getElementById('mobile-menu').classList.toggle('open');
+        }
+
+        function closeMenu() {
+            document.getElementById('mobile-menu').classList.remove('open');
+        }
+
+        function toggleFaq(btn) {
+            btn.closest('.faq-item').classList.toggle('open');
+        }
+
+        // Reveal and Stats
+        function checkReveal() {
+            document.querySelectorAll('.reveal').forEach(el => {
+                if (el.getBoundingClientRect().top < window.innerHeight * 0.88) el.classList.add('visible');
+            });
+        }
+        let statsAnimated = false;
+
+        function animateStats() {
+            if (statsAnimated) return;
+            const statsSection = document.getElementById('progress');
+            if (statsSection && statsSection.getBoundingClientRect().top < window.innerHeight * 0.85) {
+                statsAnimated = true;
+                document.querySelectorAll('.stat-number[data-target]').forEach(el => {
+                    const target = parseInt(el.getAttribute('data-target'));
+                    const suffix = el.getAttribute('data-suffix') || '';
+                    let current = 0;
+                    const step = target / 50;
+                    const timer = setInterval(() => {
+                        current += step;
+                        if (current >= target) {
+                            el.textContent = target.toLocaleString() + suffix;
+                            clearInterval(timer);
+                        } else {
+                            el.textContent = Math.floor(current).toLocaleString() + suffix;
+                        }
+                    }, 30);
+                });
+            }
+        }
+
+        // Demo AI
+        const chipResponses = {
+            Algebra: "Algebra — tenglamalar, ifodalar va funksiyalar haqidagi fan. Masalan: 2x + 3 = 7 → 2x = 4 → x = 2. 🧮",
+            IELTS: "IELTS imtihonida 4 bo'lim bor: Listening, Reading, Writing va Speaking. Band 7.0 olish uchun har kuni kamida 30 daqiqa mashq qiling. 📖",
+            Python: "Python — eng oson dasturlash tillari! print('Hello, World!') — birinchi kodingiz. 💻",
+            Fizika: "Fizika — tabiat qonunlari. Newtonning ikkinchi qonuni: F = m × a. ⚛️",
+            Biologiya: "Biologiya tirik organizmlarni o'rganadi. Hujayra — hayotning asosiy birligi. 🧬"
+        };
+        let typingInterval = null;
+
+        function typeText(text) {
+            if (typingInterval) clearInterval(typingInterval);
+            const output = document.getElementById('demo-output-text');
+            output.innerHTML = '';
+            let i = 0;
+            typingInterval = setInterval(() => {
+                if (i < text.length) {
+                    output.innerHTML = text.slice(0, i + 1) + '<span class="typing-cursor"></span>';
+                    i++;
+                } else {
+                    clearInterval(typingInterval);
+                    output.innerHTML = text;
+                }
+            }, 18);
+        }
+
+        function handleChip(topic) {
+            document.querySelectorAll('.demo-chip').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('demo-input').value = topic + ' haqida tushuntir';
+            typeText(chipResponses[topic] || 'AQLVOY yordamga tayyor!');
+        }
+        async function runDemo() {
+            const val = document.getElementById('demo-input').value.trim();
+            if (!val) return;
+            const btn = document.getElementById('demo-btn');
+            btn.disabled = true;
+            document.getElementById('demo-output-text').innerHTML = '⏳ AQLVOY o\'ylayapti...';
+            await new Promise(r => setTimeout(r, 800));
+            const found = Object.entries(chipResponses).find(([k]) => val.toLowerCase().includes(k.toLowerCase()));
+            typeText(found ? found[1] : "Salom! Men AQLVOY — sizning AI ustozingizman. " + val + " haqida savolingizni qabul qildim! To'liq versiyada batafsil javob beraman 🚀");
+            btn.disabled = false;
+        }
+        // document.getElementById('demo-input') ? .addEventListener('keydown', e => {
+        //     if (e.key === 'Enter') runDemo();
+        // });
+
+        setTimeout(checkReveal, 100);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>AQLVOY | O'qituvchi paneli — Ilhomli ta'lim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+         :root {
+            --bg-primary: #f6f9fe;
+            --bg-surface: #ffffff;
+            --sidebar-bg: #ffffff;
+            --text-primary: #0b2b3b;
+            --text-secondary: #4a6272;
+            --accent-cyan: #0f9bc2;
+            --accent-blue: #2c6e9e;
+            --accent-gradient: linear-gradient(135deg, #0f9bc2 0%, #2c6e9e 100%);
+            --border-light: #e2edf2;
+            --shadow-sm: 0 12px 30px rgba(0, 32, 64, 0.05);
+            --shadow-md: 0 20px 35px -12px rgba(0, 32, 64, 0.08);
+            --stat-badge: #eef6fc;
+            --cyan-glow: rgba(15, 155, 194, 0.12);
+            --card-radius: 28px;
+            --transition: all 0.25s ease;
+        }
+        
+        body.light-mode {
+            --bg-primary: #f6f9fe;
+            --bg-surface: #ffffff;
+            --sidebar-bg: #ffffff;
+            --text-primary: #0b2b3b;
+            --text-secondary: #4a6272;
+            --border-light: #e2edf2;
+            --stat-badge: #eef6fc;
+        }
+        /* Dark mode — elegant dark charcoal + teal */
+        
+        body.dark-mode {
+            --bg-primary: #0f1217;
+            --bg-surface: #181e24;
+            --sidebar-bg: #10141a;
+            --text-primary: #edf4fc;
+            --text-secondary: #9bb1c2;
+            --border-light: #25313b;
+            --stat-badge: #1e2a32;
+            --shadow-sm: 0 12px 28px rgba(0, 0, 0, 0.35);
+            --shadow-md: 0 20px 38px -10px rgba(0, 0, 0, 0.45);
+            background: var(--bg-primary);
+            transition: background 0.2s, color 0.2s;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+        /* Layout */
+        
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+        /* ========= SIDEBAR — elegant frosted / glassmorphism ========= */
+        
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(0px);
+            border-right: 1px solid var(--border-light);
+            padding: 32px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 20;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .sidebar-logo {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            margin-bottom: 36px;
+            padding-left: 8px;
+        }
+        
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--stat-badge);
+            border-radius: 24px;
+            padding: 12px 18px;
+            margin-bottom: 36px;
+            border: 1px solid var(--border-light);
+        }
+        
+        .sidebar-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 32px;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: white;
+            box-shadow: 0 6px 12px rgba(15, 155, 194, 0.25);
+        }
+        
+        .sidebar-uname {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .sidebar-role {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        
+        .sidebar-nav {
+            margin-top: 12px;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 18px;
+            border-radius: 18px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            margin-bottom: 8px;
+        }
+        
+        .sidebar-item i {
+            width: 24px;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-item:hover {
+            background: var(--cyan-glow);
+            color: var(--accent-cyan);
+            transform: translateX(4px);
+        }
+        
+        .sidebar-item.active {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 8px 18px rgba(15, 155, 194, 0.3);
+        }
+        
+        .sidebar-logout {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 18px;
+            border-radius: 18px;
+            cursor: pointer;
+            color: #e07a5f;
+            margin-top: 48px;
+            font-weight: 500;
+            transition: var(--transition);
+            border-top: 1px solid var(--border-light);
+            padding-top: 20px;
+        }
+        
+        .sidebar-logout:hover {
+            background: rgba(224, 122, 95, 0.12);
+            color: #f28b6e;
+        }
+        /* MAIN CONTENT */
+        
+        .dash-main {
+            margin-left: 280px;
+            flex: 1;
+            padding: 36px 44px;
+            transition: var(--transition);
+        }
+        /* header area */
+        
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        
+        .dash-title {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            background: linear-gradient(125deg, var(--text-primary), var(--accent-cyan));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        /* stats cards */
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 44px;
+        }
+        
+        .stat-card {
+            background: var(--bg-surface);
+            border-radius: var(--card-radius);
+            padding: 24px 28px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s, box-shadow 0.2s;
+            backdrop-filter: blur(2px);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .sc-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 12px;
+        }
+        
+        .sc-value {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+        /* dash cards */
+        
+        .dash-card {
+            background: var(--bg-surface);
+            border-radius: var(--card-radius);
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+            padding: 28px 32px;
+            margin-bottom: 28px;
+            transition: all 0.2s;
+        }
+        
+        .dash-card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-primary);
+            border-left: 4px solid var(--accent-cyan);
+            padding-left: 18px;
+        }
+        /* table modern */
+        
+        .dash-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        
+        .dash-table th {
+            text-align: left;
+            padding: 16px 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            border-bottom: 1.5px solid var(--border-light);
+        }
+        
+        .dash-table td {
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 14px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(15, 155, 194, 0.12);
+            color: var(--accent-cyan);
+            letter-spacing: 0.3px;
+        }
+        
+        .badge.green {
+            background: rgba(72, 187, 120, 0.12);
+            color: #3acf7a;
+        }
+        /* forms */
+        
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+        
+        .form-input,
+        select.form-input,
+        textarea.form-input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 20px;
+            border: 1.5px solid var(--border-light);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            margin-bottom: 22px;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px var(--cyan-glow);
+        }
+        
+        .btn-submit {
+            background: var(--accent-gradient);
+            border: none;
+            padding: 14px 28px;
+            border-radius: 34px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 6px 14px rgba(15, 155, 194, 0.3);
+        }
+        
+        .btn-submit:hover {
+            transform: scale(1.02);
+            opacity: 0.95;
+            box-shadow: 0 10px 20px rgba(15, 155, 194, 0.4);
+        }
+        /* theme toggle button (stylish) */
+        
+        #theme-toggle-btn {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 1001;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-light);
+            backdrop-filter: blur(8px);
+            padding: 14px 16px;
+            border-radius: 60px;
+            cursor: pointer;
+            font-size: 1.3rem;
+            box-shadow: var(--shadow-md);
+            color: var(--text-primary);
+            transition: all 0.2s;
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #theme-toggle-btn:hover {
+            transform: scale(1.07);
+            background: var(--accent-cyan);
+            color: white;
+        }
+        /* responsive */
+        
+        @media (max-width: 860px) {
+            .sidebar {
+                width: 260px;
+                transform: translateX(-100%);
+                transition: transform 0.25s;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .dash-main {
+                margin-left: 0;
+                padding: 24px 20px;
+            }
+        }
+        /* scrollbar */
+        
+         ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+         ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            background: var(--accent-cyan);
+            border-radius: 8px;
+        }
+        
+        i,
+        .fas,
+        .far {
+            color: inherit;
+        }
+        
+        .stat-card .sc-value i {
+            font-size: 1rem;
+        }
+        
+        .progress-text {
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <button id="theme-toggle-btn" aria-label="Toggle theme">
+    <i class="fas fa-moon"></i>
+</button>
+
+    <div class="dashboard">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-logo">✨ AQLVOY</div>
+            <div class="sidebar-user">
+                <div class="sidebar-avatar" id="user-avatar">M</div>
+                <div>
+                    <div class="sidebar-uname" id="user-name">User</div>
+                    <div class="sidebar-role">
+                        <i class="fas fa-chalkboard-user"></i>
+                        <span id="teacher-subject">Matematika</span> · O‘qituvchi
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-nav">
+                <div class="sidebar-item active" onclick="showTab('home')">
+                    <i class="fas fa-home"></i> <span>Bosh sahifa</span>
+                </div>
+                <div class="sidebar-item" onclick="showTab('students')">
+                    <i class="fas fa-users"></i> <span>O'quvchilar</span>
+                </div>
+                <div class="sidebar-item" onclick="showTab('tasks')">
+                    <i class="fas fa-tasks"></i> <span>Vazifalar</span>
+                </div>
+            </div>
+            <div class="sidebar-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> <span>Chiqish</span>
+            </div>
+        </div>
+
+        <main class="dash-main">
+            <!-- HOME TAB -->
+            <div id="home-tab">
+                <div class="dash-header">
+                    <div class="dash-title"><i class="fas fa-chalkboard"></i> O'qituvchi paneli</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="sc-label"><i class="fas fa-user-graduate"></i> Jami o'quvchilar</div>
+                        <div class="sc-value">87</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="sc-label"><i class="fas fa-star"></i> O'rtacha baho</div>
+                        <div class="sc-value">4.2</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="sc-label"><i class="fas fa-check-circle"></i> Bajarilgan vazifalar</div>
+                        <div class="sc-value">234</div>
+                    </div>
+                </div>
+                <div class="dash-card">
+                    <div class="dash-card-title"><i class="fas fa-table-list"></i> O'quvchilar ro'yxati</div>
+                    <table class="dash-table">
+                        <thead>
+                            <tr>
+                                <th>Ism</th>
+                                <th>Sinf</th>
+                                <th>O'rtacha</th>
+                                <th>Holat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Bobur Toshmatov</td>
+                                <td>9A</td>
+                                <td>4.9</td>
+                                <td><span class="badge green">A'lo</span></td>
+                            </tr>
+                            <tr>
+                                <td>Nilufar Ergasheva</td>
+                                <td>9A</td>
+                                <td>4.7</td>
+                                <td><span class="badge green">A'lo</span></td>
+                            </tr>
+                            <tr>
+                                <td>Kamola Tursunova</td>
+                                <td>9B</td>
+                                <td>3.8</td>
+                                <td><span class="badge green">Yaxshi</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- STUDENTS TAB (exact same data) -->
+            <div id="students-tab" style="display:none">
+                <div class="dash-header">
+                    <div class="dash-title"><i class="fas fa-users-viewfinder"></i> O'quvchilar</div>
+                </div>
+                <div class="dash-card">
+                    <div class="dash-card-title"><i class="fas fa-chart-line"></i> Akademik natijalar</div>
+                    <table class="dash-table">
+                        <thead>
+                            <tr>
+                                <th>Ism</th>
+                                <th>Sinf</th>
+                                <th>Fan</th>
+                                <th>Baho</th>
+                                <th>Progress</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Bobur Toshmatov</td>
+                                <td>9A</td>
+                                <td>Matematika</td>
+                                <td>4.9</td>
+                                <td>92%</td>
+                            </tr>
+                            <tr>
+                                <td>Nilufar Ergasheva</td>
+                                <td>9A</td>
+                                <td>Matematika</td>
+                                <td>4.7</td>
+                                <td>88%</td>
+                            </tr>
+                            <tr>
+                                <td>Kamola Tursunova</td>
+                                <td>9B</td>
+                                <td>Matematika</td>
+                                <td>3.8</td>
+                                <td>76%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TASKS TAB (data / form unchanged) -->
+            <div id="tasks-tab" style="display:none">
+                <div class="dash-header">
+                    <div class="dash-title"><i class="fas fa-pen-ruler"></i> Vazifalar</div>
+                </div>
+                <div class="dash-card">
+                    <div class="dash-card-title"><i class="fas fa-plus-circle"></i> Yangi vazifa yaratish</div>
+                    <label class="form-label">Vazifa sarlavhasi</label>
+                    <input class="form-input" id="taskTitle" placeholder="Masalan: Trigonometriya testi">
+                    <label class="form-label">Sinf</label>
+                    <select class="form-input" id="taskClass">
+                    <option>9A</option><option>9B</option><option>10A</option>
+                </select>
+                    <label class="form-label">Vazifa matni</label>
+                    <textarea class="form-input" id="taskDesc" rows="4" placeholder="Vazifa shartini yozing..."></textarea>
+                    <button class="btn-submit" onclick="alert('✅ Vazifa yuborildi!')"><i class="fas fa-paper-plane"></i> Yuborish</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app-api.js"></script>
+<script>
+    const userName = localStorage.getItem('userName') || "O'qituvchi";
+    const teacherSubject = localStorage.getItem('teacherSubject') || 'Matematika';
+    const teacherEmail = currentUserEmail('teacher@aqlvoy.uz');
+    const avatarElem = document.getElementById('user-avatar');
+    const nameElem = document.getElementById('user-name');
+    const subjectSpan = document.getElementById('teacher-subject');
+    if (nameElem) nameElem.textContent = userName.split(' ')[0];
+    if (avatarElem) avatarElem.textContent = (userName[0] || 'M').toUpperCase();
+    if (subjectSpan) subjectSpan.textContent = teacherSubject;
+
+    function showTab(tab) {
+        const home = document.getElementById('home-tab');
+        const students = document.getElementById('students-tab');
+        const tasks = document.getElementById('tasks-tab');
+        if (home) home.style.display = 'none';
+        if (students) students.style.display = 'none';
+        if (tasks) tasks.style.display = 'none';
+
+        if (tab === 'home' && home) home.style.display = 'block';
+        if (tab === 'students' && students) students.style.display = 'block';
+        if (tab === 'tasks' && tasks) tasks.style.display = 'block';
+
+        const items = document.querySelectorAll('.sidebar-item');
+        items.forEach(item => {
+            item.classList.remove('active');
+            if ((tab === 'home' && item.innerText.includes('Bosh sahifa')) ||
+                (tab === 'students' && item.innerText.includes("O'quvchilar")) ||
+                (tab === 'tasks' && item.innerText.includes('Vazifalar'))) {
+                item.classList.add('active');
+            }
+        });
+    }
+
+    function logout() {
+        window.location.href = 'index.html';
+    }
+
+    function ensureTaskListCard() {
+        let body = document.getElementById('teacher-tasks-body');
+        if (body) return body;
+
+        const formCard = document.querySelector('#tasks-tab .dash-card');
+        if (!formCard) return null;
+        formCard.insertAdjacentHTML('afterend', `
+            <div class="dash-card" id="teacher-task-list-card">
+                <div class="dash-card-title"><i class="fas fa-list-check"></i> Yuborilgan vazifalar</div>
+                <table class="dash-table">
+                    <thead>
+                        <tr><th>Vazifa</th><th>Sinf</th><th>Muddat</th><th>Holat</th></tr>
+                    </thead>
+                    <tbody id="teacher-tasks-body"></tbody>
+                </table>
+            </div>
+        `);
+        return document.getElementById('teacher-tasks-body');
+    }
+
+    function renderTeacherDashboard(data) {
+        persistUserSession(data.user);
+        if (nameElem) nameElem.textContent = data.user.name.split(' ')[0];
+        if (avatarElem) avatarElem.textContent = (data.user.name[0] || 'M').toUpperCase();
+        if (subjectSpan) subjectSpan.textContent = data.user.teacherSubject || teacherSubject;
+
+        const statValues = document.querySelectorAll('#home-tab .stats-grid .sc-value');
+        if (statValues[0]) statValues[0].textContent = data.stats.totalStudents;
+        if (statValues[1]) statValues[1].textContent = data.stats.averageGrade;
+        if (statValues[2]) statValues[2].textContent = data.stats.completedTasks;
+
+        const homeBody = document.querySelector('#home-tab .dash-table tbody');
+        if (homeBody) {
+            homeBody.innerHTML = data.students.map(student => `
+                <tr>
+                    <td>${escapeHtml(student.name)}</td>
+                    <td>${escapeHtml(student.class_name)}</td>
+                    <td>${escapeHtml(student.average_grade)}</td>
+                    <td><span class="badge green">${escapeHtml(student.status)}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        const studentsBody = document.querySelector('#students-tab .dash-table tbody');
+        if (studentsBody) {
+            studentsBody.innerHTML = data.students.map(student => `
+                <tr>
+                    <td>${escapeHtml(student.name)}</td>
+                    <td>${escapeHtml(student.class_name)}</td>
+                    <td>${escapeHtml(student.subject)}</td>
+                    <td>${escapeHtml(student.average_grade)}</td>
+                    <td>${escapeHtml(student.progress)}%</td>
+                </tr>
+            `).join('');
+        }
+
+        const classSelect = document.getElementById('taskClass');
+        if (classSelect) {
+            classSelect.innerHTML = data.classes.map(cls => `<option>${escapeHtml(cls)}</option>`).join('');
+        }
+
+        const tasksBody = ensureTaskListCard();
+        if (tasksBody) {
+            tasksBody.innerHTML = data.tasks.map(task => `
+                <tr>
+                    <td>${escapeHtml(task.title)}</td>
+                    <td>${escapeHtml(task.class_name)}</td>
+                    <td>${escapeHtml(task.due_label)}</td>
+                    <td><span class="badge">${escapeHtml(task.status)}</span></td>
+                </tr>
+            `).join('');
+        }
+    }
+
+    async function loadTeacherDashboard() {
+        try {
+            const data = await apiRequest(`/api/dashboard/teacher?email=${encodeURIComponent(teacherEmail)}`);
+            renderTeacherDashboard(data);
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+        }
+    }
+
+    async function createTask() {
+        const title = document.getElementById('taskTitle').value.trim();
+        const className = document.getElementById('taskClass').value;
+        const description = document.getElementById('taskDesc').value.trim();
+        if (!title || !description) {
+            alert('Vazifa sarlavhasi va matnini kiriting.');
+            return;
+        }
+
+        try {
+            const response = await apiRequest('/api/tasks', {
+                method: 'POST',
+                body: JSON.stringify({
+                    email: teacherEmail,
+                    title,
+                    class_name: className,
+                    description,
+                }),
+            });
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDesc').value = '';
+            renderTeacherDashboard(response.dashboard);
+            alert(response.message);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    showTab('home');
+    loadTeacherDashboard();
+
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    const iconEl = themeBtn.querySelector('i');
+
+    function setThemeIcon(theme) {
+        if (!iconEl) return;
+        iconEl.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+
+    function applyTheme(theme) {
+        if (theme === 'light') {
+            document.body.classList.add('light-mode');
+            document.body.classList.remove('dark-mode');
+            setThemeIcon('light');
+        } else {
+            document.body.classList.add('dark-mode');
+            document.body.classList.remove('light-mode');
+            setThemeIcon('dark');
+        }
+        localStorage.setItem('aqlvoy-theme', theme);
+    }
+
+    const savedTheme = localStorage.getItem('aqlvoy-theme');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    applyTheme(savedTheme || (prefersLight ? 'light' : 'dark'));
+
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            const isCurrentlyLight = document.body.classList.contains('light-mode');
+            applyTheme(isCurrentlyLight ? 'dark' : 'light');
+        });
+    }
+</script>
+</body>
+
+</html>

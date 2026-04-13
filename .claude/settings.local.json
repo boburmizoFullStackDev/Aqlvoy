@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(env/Scripts/python manage.py makemigrations)",
+      "Bash(env/Scripts/python manage.py migrate)",
+      "Bash(env/Scripts/python -c \"import os; os.remove\\('db.sqlite3'\\)\")",
+      "Bash(cmd /c \"tasklist | findstr python\")",
+      "Bash(cmd /c tasklist)",
+      "Bash(env/Scripts/python manage.py migrate users 0001 --fake)",
+      "Bash(env/Scripts/python -c ':*)",
+      "Bash(env/Scripts/python manage.py migrate --fake-initial)",
+      "Bash(env/Scripts/python manage.py check)",
+      "Bash(find d:/Loyihalar/Aqlvoy/apps -path \"*/migrations/*.py\" ! -name \"__init__.py\" -delete)",
+      "Bash(env/Scripts/python -c \"import os; os.remove\\('db_new.sqlite3'\\); print\\('DB removed'\\)\")",
+      "Bash(python manage.py check)",
+      "Bash(python -c ':*)",
+      "Bash(python manage.py shell -c ':*)",
+      "Bash(python manage.py makemigrations sessions)",
+      "Bash(python manage.py makemigrations apps.sessions)",
+      "Bash(python manage.py makemigrations --check)",
+      "Bash(python manage.py makemigrations learning_sessions)",
+      "Bash(python manage.py migrate)",
+      "Bash(pip show:*)",
+      "Bash(pip install:*)",
+      "Bash(python manage.py makemigrations users ai_chat)",
+      "Bash(pip freeze:*)",
+      "Bash(git check-ignore:*)"
+    ]
+  }
+}

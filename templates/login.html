@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Kirish | AQLVOY — 3D aqlli ta'lim</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #050E2A 0%, #0D2057 25%, #051332 50%, #0a1c4f 75%, #050E2A 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .login-container {
+            max-width: 480px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        /* Asosiy karta */
+        
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 28px;
+            padding: 42px 38px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 0 60px rgba(6, 182, 212, 0.1);
+            position: relative;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+            to {
+                opacity: 1;
+                transform: translateY(0) translateZ(0);
+            }
+        }
+        /* Yuqori qism: rasm + AQLVOY matni yonma-yon */
+        
+        .modal-logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .modal-logo-row img {
+            height: 100px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        .logo-text {
+            font-family: 'Baloo 2', cursive;
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(125deg, #0F2B6D, #1E3A8A, #06b6d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0A0F2C;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .modal-sub {
+            font-size: 0.9rem;
+            color: #4b5563;
+            margin-bottom: 28px;
+            border-left: 4px solid #06b6d4;
+            padding-left: 14px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #1f2937;
+            margin-bottom: 6px;
+            margin-top: 16px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 18px;
+            background: #ffffff;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            outline: none;
+            font-weight: 500;
+        }
+        
+        .form-input:focus {
+            border-color: #06b6d4;
+            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15);
+        }
+        
+        .pass-wrap {
+            position: relative;
+        }
+        
+        .pass-toggle {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #6c757d;
+            transition: 0.2s;
+        }
+        
+        .pass-toggle:hover {
+            color: #06b6d4;
+        }
+        
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(105deg, #0F2B6D, #1E3A8A);
+            border: none;
+            padding: 15px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 1rem;
+            color: white;
+            margin-top: 28px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-login:hover {
+            background: linear-gradient(105deg, #1E3A8A, #2563eb);
+            box-shadow: 0 15px 28px -8px #1e3a8a;
+        }
+        
+        .btn-telegram,
+        .btn-google {
+            width: 100%;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 12px;
+            color: #1e293b;
+        }
+        
+        .btn-telegram:hover,
+        .btn-google:hover {
+            background: white;
+            border-color: #06b6d4;
+            box-shadow: 0 8px 20px rgba(6, 182, 212, 0.15);
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0 18px;
+        }
+        
+        .divider hr {
+            flex: 1;
+            border: none;
+            height: 1.5px;
+            background: #e2e8f0;
+        }
+        
+        .divider span {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+        
+        .modal-switch {
+            text-align: center;
+            font-size: 0.85rem;
+            margin-top: 20px;
+            color: #334155;
+        }
+        
+        .modal-switch a {
+            color: #1E3A8A;
+            font-weight: 800;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        
+        .modal-switch a:hover {
+            color: #06b6d4;
+            text-decoration: underline;
+        }
+        
+        .forgot-link {
+            text-align: right;
+            margin-top: 8px;
+            font-size: 0.7rem;
+        }
+        
+        .forgot-link a {
+            color: #6c757d;
+            text-decoration: none;
+        }
+        
+        .forgot-link a:hover {
+            color: #06b6d4;
+        }
+        /* Bosh sahifaga qaytish - pastda, kartadan tashqari */
+        
+        .back-home {
+            text-align: center;
+            margin-top: 24px;
+        }
+        
+        .back-home a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255, 255, 255, 0.85);
+            background: rgba(15, 25, 45, 0.55);
+            backdrop-filter: blur(8px);
+            padding: 8px 24px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+        
+        .back-home a:hover {
+            background: #1e3a8acc;
+            color: white;
+            border-color: #22d3ee;
+        }
+        
+        @media (max-width: 550px) {
+            .login-card {
+                padding: 32px 24px;
+            }
+            .modal-title {
+                font-size: 1.6rem;
+            }
+            .modal-logo-row img {
+                height: 40px;
+            }
+            .logo-text {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-wrapper">
+        <div class="login-container">
+            <div class="login-card" id="loginCard">
+                <!-- Rasm + AQLVOY matni yonma-yon -->
+                <div class="modal-logo-row">
+                    <img src="{% static 'images/image.png' %}" alt="AQLVOY" onerror="this.style.display='none'">
+                    <span class="logo-text">AQLVOY</span>
+                </div>
+                <h2 class="modal-title">Xush kelibsiz! 👋</h2>
+                <p class="modal-sub">Hisobingizga kiring va aqlli o‘rganishni boshlang</p>
+
+                <label class="form-label">Telefon raqam</label>
+                <input type="tel" class="form-input" id="login-phone" placeholder="+998901234567" autocomplete="tel">
+
+                <label class="form-label">Parol</label>
+                <div class="pass-wrap">
+                    <input type="password" class="form-input" id="login-pass" placeholder="Parolingiz" value="123456">
+                    <button type="button" class="pass-toggle" onclick="togglePassword()">👁</button>
+                </div>
+                <div class="forgot-link">
+                    <a href="#">Parolni unutdingizmi?</a>
+                </div>
+
+                <button class="btn-login" onclick="handleLogin(event)">Kirish →</button>
+
+                <div class="divider">
+                    <hr><span>yoki</span>
+                    <hr>
+                </div>
+
+                <button class="btn-telegram" onclick="telegramLogin()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#229ED9"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.012 9.488c-.152.668-.553.831-1.12.516l-3.08-2.27-1.485 1.43c-.164.165-.303.303-.621.303l.221-3.138 5.718-5.166c.249-.22-.054-.343-.384-.122L7.28 14.565l-3.03-.946c-.659-.206-.672-.659.138-.975l11.835-4.563c.549-.2 1.028.134.84.967h-.501z"/></svg>
+                Telegram orqali kirish
+            </button>
+
+                <button class="btn-google" onclick="googleLogin()">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                Google bilan kirish
+            </button>
+
+                <div class="modal-switch">
+                    Hisobingiz yo’qmi? <a href="{% url 'register' %}">Ro’yxatdan o’ting</a>
+                </div>
+            </div>
+
+            <!-- Bosh sahifaga qaytish - pastda, to'g'ri joyda -->
+            <div class="back-home">
+                <a href="{% url 'index' %}">← Bosh sahifaga qaytish</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function togglePassword() {
+        const input = document.getElementById('login-pass');
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    async function handleLogin(event) {
+        const phone = document.getElementById('login-phone').value.trim();
+        const pass  = document.getElementById('login-pass').value;
+
+        if (!phone) { alert("Telefon raqamingizni kiriting."); return; }
+        if (!pass)  { alert("Parolingizni kiriting."); return; }
+
+        const btn = event.currentTarget;
+        const orig = btn.innerText;
+        btn.innerText = 'Kirilmoqda...';
+        btn.disabled = true;
+
+        try {
+            const res = await apiRequest('/api/auth/login', {
+                method: 'POST',
+                body: JSON.stringify({ phone, password: pass }),
+            });
+            persistUserSession(res.user, res.access, res.refresh);
+            window.location.href = routeForRole(res.user.role);
+        } catch (err) {
+            alert(err.message);
+        } finally {
+            btn.innerText = orig;
+            btn.disabled = false;
+        }
+    }
+
+    function telegramLogin() {
+        window.open('https://t.me/aqlvoyai', '_blank');
+        alert("Telegram autentifikatsiya hali ulanmagan.");
+    }
+
+    function googleLogin() {
+        alert("Google login hali ulanmagan.");
+    }
+
+    // Pre-fill if returning user
+    const saved = localStorage.getItem('userPhone');
+    if (saved) document.getElementById('login-phone').value = saved;
+</script>
+<script src="{% static 'js/app-api.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AQLVOY — Sening aqlli ustozing! | AI ta'lim platformasi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+         :root {
+            --cyan-400: #22d3ee;
+            --cyan-500: #06b6d4;
+            --cyan-600: #0891b2;
+            --blue-600: #2563eb;
+            --text-dark: #0f172a;
+            --gray-600: #475569;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #0f172a;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        /* Splash Screen */
+        
+        #splash {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(145deg, #0c4a6e, #0f172a);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        #splash.out {
+            opacity: 0;
+            transform: scale(1.05);
+            pointer-events: none;
+        }
+        
+        .splash-logo {
+            width: 160px;
+            height: auto;
+            animation: splashIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        
+        @keyframes splashIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .splash-title {
+            font-family: 'Baloo 2', cursive;
+            font-weight: 900;
+            font-size: 2.2rem;
+            color: white;
+        }
+        
+        .splash-sub {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .splash-bar {
+            width: 160px;
+            height: 3px;
+            border-radius: 999px;
+            background: linear-gradient(to right, #22d3ee, #3b82f6);
+            transform-origin: left;
+            animation: barGrow 0.8s ease 0.5s both;
+        }
+        
+        @keyframes barGrow {
+            from {
+                transform: scaleX(0);
+            }
+            to {
+                transform: scaleX(1);
+            }
+        }
+        /* 3D Background Effects */
+        
+        .bg-3d-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .globe-background {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(50px);
+            animation: floatGlobe 20s ease-in-out infinite;
+        }
+        
+        .globe-1 {
+            width: 500px;
+            height: 500px;
+            top: -200px;
+            right: -150px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.3), rgba(6, 182, 212, 0.05));
+        }
+        
+        .globe-2 {
+            width: 600px;
+            height: 600px;
+            bottom: -250px;
+            left: -200px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.25), rgba(6, 182, 212, 0.03));
+            animation-delay: -8s;
+        }
+        
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.4;
+            animation: pulseOrb 10s ease-in-out infinite;
+        }
+        
+        .orb-1 {
+            width: 350px;
+            height: 350px;
+            top: 25%;
+            left: 5%;
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+        }
+        
+        .orb-2 {
+            width: 450px;
+            height: 450px;
+            bottom: 15%;
+            right: -50px;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            animation-delay: -5s;
+        }
+        
+        @keyframes floatGlobe {
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            33% {
+                transform: translate(35px, -30px) rotate(6deg);
+            }
+            66% {
+                transform: translate(-25px, 25px) rotate(-4deg);
+            }
+        }
+        
+        @keyframes pulseOrb {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.25);
+                opacity: 0.6;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .globe-1,
+            .globe-2 {
+                display: none;
+            }
+            .orb-1,
+            .orb-2 {
+                display: none;
+            }
+        }
+        /* Navbar */
+        
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 48px;
+            background: transparent;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            padding: 12px 48px;
+        }
+        
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .nav-logo svg {
+            width: 44px;
+            height: 44px;
+        }
+        
+        .nav-logo-text {
+            font-size: 1.8rem;
+            font-weight: 800;
+            font-family: 'Baloo 2', cursive;
+            color: #0f172a;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        
+        .nav-links button {
+            background: none;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #1e293b;
+            transition: 0.2s;
+        }
+        
+        .nav-links button:hover {
+            color: #0891b2;
+        }
+        
+        .nav-right {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-login,
+        .btn-register {
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .btn-login {
+            background: transparent;
+            border: 1px solid #cbd5e1;
+            color: #1e293b;
+        }
+        
+        .btn-login:hover {
+            background: #f8fafc;
+        }
+        
+        .btn-register {
+            background: #06b6d4;
+            color: white;
+            box-shadow: 0 4px 8px rgba(6, 182, 212, 0.2);
+        }
+        
+        .btn-register:hover {
+            background: #0891b2;
+            transform: scale(1.02);
+        }
+        
+        .hamburger {
+            display: none;
+            font-size: 28px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        
+        #mobile-menu {
+            position: fixed;
+            top: 80px;
+            right: -280px;
+            width: 260px;
+            background: white;
+            border-radius: 28px 0 0 28px;
+            box-shadow: -5px 8px 30px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            z-index: 999;
+            transition: 0.3s;
+        }
+        
+        #mobile-menu.open {
+            right: 0;
+        }
+        
+        .mobile-nav-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 12px;
+            border-radius: 60px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 860px) {
+            .nav-links,
+            .nav-right {
+                display: none;
+            }
+            .hamburger {
+                display: block;
+            }
+            nav {
+                padding: 16px 24px;
+            }
+        }
+        /* Hero Section */
+        
+        section {
+            padding: 100px 24px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(224, 242, 254, 0.9);
+            color: #0891b2;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            margin-bottom: 28px;
+        }
+        
+        .hero-title {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 900;
+            line-height: 1.2;
+            font-family: 'Baloo 2', cursive;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .text-gradient-gold {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero-sub {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 32px;
+            max-width: 90%;
+        }
+        
+        .hero-btns {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        
+        .btn-hero-primary {
+            background: #06b6d4;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 800;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 12px 20px -8px rgba(6, 182, 212, 0.4);
+            transition: 0.2s;
+        }
+        
+        .btn-hero-primary:hover {
+            background: #0891b2;
+            transform: translateY(-2px);
+        }
+        
+        .btn-hero-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 800;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .btn-hero-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .hero-tags {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        
+        .hero-tag {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 60px;
+            padding: 8px 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+        }
+        
+        .hero-img-wrap {
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .hero-img-inner {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-ring-1,
+        .hero-ring-2 {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px dashed rgba(6, 182, 212, 0.5);
+            width: 280px;
+            height: 280px;
+            animation: spin 20s linear infinite;
+        }
+        
+        .hero-ring-2 {
+            width: 340px;
+            height: 340px;
+            border: 2px solid rgba(6, 182, 212, 0.2);
+            animation: spin 25s reverse infinite;
+        }
+        
+        .hero-glow {
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(6, 182, 212, 0) 70%);
+            border-radius: 50%;
+        }
+        
+        .hero-logo {
+            width: 220px;
+            animation: float 4s ease-in-out infinite;
+            z-index: 2;
+        }
+        
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-18px);
+            }
+        }
+        
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @media (max-width: 760px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-sub {
+                margin: 0 auto 32px;
+            }
+            .hero-tags {
+                justify-content: center;
+            }
+        }
+        /* Features Section */
+        
+        #ai-features {
+            background: transparent;
+            position: relative;
+            z-index: 2;
+            padding: 80px 24px;
+        }
+        
+        .features-container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        
+        .features-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .features-badge {
+            display: inline-block;
+            background: rgba(6, 182, 212, 0.15);
+            color: #06b6d4;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+        }
+        
+        .features-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            font-family: 'Baloo 2', cursive;
+            margin-bottom: 16px;
+            color: white;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .features-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .features-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+        
+        .features-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 24px 28px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .feature-card:hover {
+            transform: translateX(8px) translateY(-4px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(6, 182, 212, 0.5);
+        }
+        
+        .feature-card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+        
+        .icon-brain {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+        
+        .icon-bolt {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+        }
+        
+        .icon-chart {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .feature-card-content h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: white;
+        }
+        
+        .feature-card-content p {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .feature-card-glow {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.15), transparent);
+            transition: 0.5s;
+        }
+        
+        .feature-card:hover .feature-card-glow {
+            left: 100%;
+        }
+        
+        .features-chat {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .features-chat:hover {
+            transform: translateY(-8px);
+            border-color: rgba(6, 182, 212, 0.4);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+        }
+        
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 24px;
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chat-info {
+            flex: 1;
+        }
+        
+        .chat-name {
+            font-weight: 700;
+            color: white;
+            display: block;
+            font-size: 0.95rem;
+        }
+        
+        .chat-status {
+            font-size: 0.7rem;
+            color: #10b981;
+        }
+        
+        .chat-dots {
+            display: flex;
+            gap: 4px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 8px;
+        }
+        
+        .chat-messages {
+            padding: 20px 24px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .message-ai {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .message-ai .message-bubble {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: white;
+            border-radius: 20px;
+            border-bottom-left-radius: 4px;
+            padding: 14px 18px;
+            max-width: 90%;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .message-user {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        
+        .message-user .message-bubble {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            border-radius: 20px;
+            border-bottom-right-radius: 4px;
+            padding: 12px 18px;
+            max-width: 75%;
+            font-size: 0.9rem;
+        }
+        
+        .message-bubble code {
+            display: block;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 6px 10px;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+        
+        .message-time {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.35);
+            margin-top: 4px;
+            margin-left: 8px;
+        }
+        
+        .chat-input-area {
+            padding: 16px 24px 24px;
+            display: flex;
+            gap: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 12px 20px;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        
+        .chat-input:focus {
+            border-color: #06b6d4;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .chat-send {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .chat-send:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+        }
+        
+        @media (max-width: 900px) {
+            .features-wrapper {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .features-title {
+                font-size: 2rem;
+            }
+            .feature-card {
+                padding: 20px 24px;
+            }
+            .feature-card-icon {
+                width: 48px;
+                height: 48px;
+            }
+            .chat-messages {
+                min-height: 260px;
+            }
+        }
+        
+        @media (max-width: 550px) {
+            .feature-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .message-ai .message-bubble,
+            .message-user .message-bubble {
+                max-width: 95%;
+            }
+            .features-title {
+                font-size: 1.8rem;
+            }
+            #ai-features {
+                padding: 60px 16px;
+            }
+        }
+        /* Subjects */
+        
+        .subjects-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 28px;
+            margin-top: 20px;
+        }
+        
+        .subject-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 48px;
+            padding: 32px 28px;
+            text-align: center;
+            width: 180px;
+            box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.08);
+            transition: 0.2s;
+            border: 1px solid #eef2ff;
+            cursor: pointer;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .subject-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 40px;
+            font-size: 36px;
+        }
+        /* Stats */
+        
+        .stats-grid {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1000px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 32px;
+            text-align: center;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 40px;
+            min-width: 180px;
+        }
+        
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 900;
+            font-family: 'Baloo 2', cursive;
+            color: #0f172a;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-weight: 600;
+        }
+        /* Demo */
+        
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 64px;
+            padding: 40px 32px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #eef2ff;
+        }
+        
+        .demo-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+        
+        .demo-chip {
+            background: #f1f5f9;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .demo-chip.active,
+        .demo-chip:hover {
+            background: #06b6d4;
+            color: white;
+        }
+        
+        .demo-input-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+        
+        .demo-input {
+            flex: 1;
+            padding: 16px 20px;
+            border-radius: 80px;
+            border: 1px solid #e2e8f0;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .demo-input:focus {
+            border-color: #06b6d4;
+        }
+        
+        .demo-btn {
+            background: #0f172a;
+            color: white;
+            border: none;
+            padding: 0 28px;
+            border-radius: 80px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        
+        .demo-output {
+            background: #f8fafc;
+            border-radius: 32px;
+            padding: 24px;
+            min-height: 120px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.1em;
+            background: #2563eb;
+            margin-left: 2px;
+            animation: blink 0.8s infinite;
+        }
+        
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        /* FAQ */
+        
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 28px;
+            margin-bottom: 16px;
+            border: 1px solid #eef2ff;
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 28px;
+            background: none;
+            border: none;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-align: left;
+            cursor: pointer;
+        }
+        
+        .faq-chevron {
+            transition: 0.2s;
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: 0.3s;
+            background: #fafcff;
+        }
+        
+        .faq-answer-inner {
+            padding: 0 28px 24px 28px;
+            color: #334155;
+        }
+        
+        .faq-item.open .faq-answer {
+            max-height: 180px;
+        }
+        
+        .faq-item.open .faq-chevron {
+            transform: rotate(180deg);
+        }
+        /* CTA */
+        
+        #cta {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+            backdrop-filter: blur(10px);
+            color: white;
+            text-align: center;
+            border-radius: 80px 80px 0 0;
+            margin-top: 60px;
+        }
+        
+        .cta-btns {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-cta-primary {
+            background: #06b6d4;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        
+        .btn-cta-primary:hover {
+            background: #0891b2;
+        }
+        
+        .btn-cta-secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 16px 40px;
+            border-radius: 60px;
+            font-weight: 800;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .btn-cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        /* Footer */
+        
+        footer {
+            background: rgba(248, 250, 252, 0.95);
+            padding: 48px 32px 24px;
+        }
+        
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.7rem;
+            font-weight: 800;
+            font-family: 'Baloo 2', cursive;
+            margin-bottom: 16px;
+        }
+        
+        .footer-brand svg {
+            width: 45px;
+            height: 45px;
+        }
+        
+        .footer-desc {
+            color: #64748b;
+            line-height: 1.5;
+        }
+        
+        .footer-col h4 {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            color: #475569;
+        }
+        
+        .footer-col button {
+            background: none;
+            border: none;
+            color: #475569;
+            cursor: pointer;
+            padding: 6px 0;
+        }
+        
+        .footer-col button:hover {
+            color: #06b6d4;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid #e2e8f0;
+            color: #64748b;
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: all 0.7s ease;
+        }
+        
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .text-gradient-cyan {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            font-family: 'Baloo 2', cursive;
+            color: white;
+        }
+        
+        @media (max-width: 700px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            section {
+                padding: 60px 20px;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 3D Background Effects -->
+    <div class="bg-3d-effects">
+        <div class="globe-background globe-1"></div>
+        <div class="globe-background globe-2"></div>
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+    </div>
+
+    <!-- SPLASH -->
+    <div id="splash">
+        <svg class="splash-logo" viewBox="0 0 120 120" fill="none">
+            <circle cx="60" cy="60" r="54" fill="url(#gradSplash)" stroke="#22d3ee" stroke-width="2"/>
+            <path d="M60 30 L75 55 L68 55 L68 75 L52 75 L52 55 L45 55 L60 30Z" fill="white"/>
+            <defs>
+                <linearGradient id="gradSplash" x1="0" y1="0" x2="100" y2="100">
+                    <stop stop-color="#0891b2"/>
+                    <stop offset="1" stop-color="#06b6d4"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        <div class="splash-title"><span style="color:#22d3ee">AQL</span>VOY</div>
+        <p class="splash-sub">Sening aqlli ustozing...</p>
+        <div class="splash-bar"></div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav id="navbar">
+        <a class="nav-logo" href="#" onclick="scrollToSection('hero'); return false;">
+            <svg viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="44" fill="#06b6d4"/>
+                <path d="M50 26 L62 48 L56 48 L56 66 L44 66 L44 48 L38 48 L50 26Z" fill="white"/>
+            </svg>
+            <span class="nav-logo-text"><span style="color:#22d3ee">AQL</span>VOY</span>
+        </a>
+        <ul class="nav-links">
+            <li><button onclick="scrollToSection('ai-features')">Imkoniyatlar</button></li>
+            <li><button onclick="scrollToSection('subjects')">Fanlar</button></li>
+            <li><button onclick="scrollToSection('demo')">Demo</button></li>
+            <li><button onclick="scrollToSection('faq')">Savol-Javob</button></li>
+        </ul>
+        <div class="nav-right">
+            <button class="btn-login" onclick="window.location.href='/login/'">Kirish</button>
+            <button class="btn-register" onclick="window.location.href='/register/'">Boshlash 🚀</button>
+        </div>
+        <button class="hamburger" onclick="toggleMenu()">☰</button>
+    </nav>
+
+    <div id="mobile-menu">
+        <button class="mobile-nav-btn" onclick="scrollToSection('hero'); closeMenu(); return false;">Bosh sahifa</button>
+        <button class="mobile-nav-btn" onclick="scrollToSection('ai-features'); closeMenu(); return false;">Imkoniyatlar</button>
+        <button class="mobile-nav-btn" onclick="scrollToSection('subjects'); closeMenu(); return false;">Fanlar</button>
+        <button class="mobile-nav-btn" onclick="scrollToSection('demo'); closeMenu(); return false;">Demo</button>
+        <button class="mobile-nav-btn" onclick="scrollToSection('faq'); closeMenu(); return false;">Savol-Javob</button>
+        <button class="btn-login" onclick="window.location.href='/login/'">Kirish</button>
+        <button class="btn-register" onclick="window.location.href='/register/'">Boshlash 🚀</button>
+    </div>
+
+    <!-- HERO -->
+    <section id="hero">
+        <div class="hero-grid">
+            <div>
+                <div class="hero-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2L15 8.5L22 9.5L17 14L18.5 21L12 17.5L5.5 21L7 14L2 9.5L9 8.5L12 2Z" fill="#F59E0B" stroke="#F59E0B" stroke-width="1"/>
+                    </svg> Sun'iy intellekt bilan o'rganish
+                </div>
+                <h1 class="hero-title"><span class="text-gradient-gold">AQLVOY</span> —<br>Sening aqlli<br>ustozing!</h1>
+                <p class="hero-sub">Sun'iy intellekt yordamida murakkab mavzularni sodda tushun, test ishlashni mashq qil va xatolaringni tahlil qil.</p>
+                <div class="hero-btns">
+                    <button class="btn-hero-primary" onclick="window.location.href='/register/'">🚀 Boshlash</button>
+                    <button class="btn-hero-secondary" onclick="scrollToSection('demo')">▶ Demo ko'rish</button>
+                </div>
+                <div class="hero-tags">
+                    <div class="hero-tag"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 8.5L21.5 9.5L16.5 14L18.5 21L12 17.5L5.5 21L7.5 14L2.5 9.5L9.5 8.5L12 2Z" fill="#FBBF24" stroke="#F59E0B" stroke-width="1.2"/></svg>24/7 AI Ustoz</div>
+                    <div class="hero-tag"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6H20V18H4V6Z" fill="#34D399" stroke="#10B981" stroke-width="1.2"/><path d="M8 10H16M8 13H13" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>O'zbek
+                        tilida</div>
+                    <div class="hero-tag"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#A78BFA" stroke-width="1.5"/><circle cx="12" cy="12" r="2" fill="#A78BFA"/><path d="M12 4V2M12 22V20M20 12H22M2 12H4" stroke="#8B5CF6" stroke-width="1.2" stroke-linecap="round"/></svg>Shaxsiy
+                        reja</div>
+                </div>
+            </div>
+            <div class="hero-img-wrap">
+                <div class="hero-img-inner">
+                    <div class="hero-ring-1"></div>
+                    <div class="hero-ring-2"></div>
+                    <div class="hero-glow"></div>
+                    <svg class="hero-logo" viewBox="0 0 160 160" fill="none">
+                        <circle cx="80" cy="80" r="70" fill="url(#aiGrad)" stroke="#22d3ee" stroke-width="3"/>
+                        <path d="M80 40 L98 70 L90 70 L90 95 L70 95 L70 70 L62 70 L80 40Z" fill="white"/>
+                        <circle cx="62" cy="72" r="4" fill="white" opacity="0.9"/>
+                        <circle cx="98" cy="72" r="4" fill="white" opacity="0.9"/>
+                        <rect x="72" y="104" width="16" height="8" rx="4" fill="white"/>
+                        <defs><linearGradient id="aiGrad" x1="0" y1="0" x2="160" y2="160"><stop stop-color="#0891b2"/><stop offset="1" stop-color="#06b6d4"/></linearGradient></defs>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="ai-features">
+        <div class="features-container">
+            <div class="features-header reveal">
+                <span class="features-badge">✨ Imkoniyatlar</span>
+                <h2 class="features-title">AI <span class="text-gradient">kuchli imkoniyatlari</span></h2>
+                <p class="features-subtitle">AQLVOY sizga eng zamonaviy sun'iy intellekt imkoniyatlarini taqdim etadi</p>
+            </div>
+
+            <div class="features-wrapper">
+                <div class="features-cards">
+                    <div class="feature-card">
+                        <div class="feature-card-icon icon-brain">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </div>
+                        <div class="feature-card-content">
+                            <h3>Aqlli tushuntirish</h3>
+                            <p>Har qanday mavzuni sizning darajangizga mos tarzda tushuntiradi</p>
+                        </div>
+                        <div class="feature-card-glow"></div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-card-icon icon-bolt">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                                <path d="M13 2L3 14h8l-2 8 10-12h-8l2-8z"/>
+                            </svg>
+                        </div>
+                        <div class="feature-card-content">
+                            <h3>Tezkor javob</h3>
+                            <p>Savollaringizga soniyalar ichida aniq javob olasiz</p>
+                        </div>
+                        <div class="feature-card-glow"></div>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-card-icon icon-chart">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                                <path d="M2 12L7 2M22 12L17 2M12 2v20M12 22l3-4M12 22l-3-4"/>
+                            </svg>
+                        </div>
+                        <div class="feature-card-content">
+                            <h3>Progress kuzatuv</h3>
+                            <p>O'sishingizni kuzating, zaif tomonlaringizni aniqlang</p>
+                        </div>
+                        <div class="feature-card-glow"></div>
+                    </div>
+                </div>
+
+                <div class="features-chat">
+                    <div class="chat-header">
+                        <div class="chat-avatar">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="10" fill="#06b6d4"/>
+                                <path d="M12 6L14 10L18 10.5L15 13L16 17L12 15L8 17L9 13L6 10.5L10 10L12 6Z" fill="white"/>
+                            </svg>
+                        </div>
+                        <div class="chat-info">
+                            <span class="chat-name">AQLVOY AI</span>
+                            <span class="chat-status">Online</span>
+                        </div>
+                        <div class="chat-dots">
+                            <span>●</span><span>●</span><span>●</span>
+                        </div>
+                    </div>
+                    <div class="chat-messages">
+                        <div class="message-ai">
+                            <div class="message-bubble">
+                                <strong>📐 Kvadrat tenglama</strong><br> Kvadrat tenglamani yechish uchun diskriminantni hisoblaymiz:<br>
+                                <code>D = b² - 4ac</code><br>
+                                <code>D = (-5)² - 4(1)(6) = 1</code><br>
+                                <code>x₁ = 3, x₂ = 2</code>
+                            </div>
+                            <span class="message-time">10:24</span>
+                        </div>
+                        <div class="message-user">
+                            <div class="message-bubble">
+                                Rahmat! Endi tushundim 🎉
+                            </div>
+                            <span class="message-time">10:25</span>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" placeholder="Savolingizni yozing..." class="chat-input">
+                        <button class="chat-send">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SUBJECTS -->
+    <section id="subjects">
+        <div style="max-width:1200px; margin:0 auto">
+            <div class="reveal" style="text-align:center; margin-bottom:80px">
+                <h2 class="section-title">Barcha asosiy <span class="text-gradient-cyan">fanlar</span></h2>
+            </div>
+            <div class="subjects-grid">
+                <div class="subject-card">
+                    <div class="subject-icon" style="background:#3B82F618;">🧮</div>
+                    <h3>Matematika</h3>
+                </div>
+                <div class="subject-card">
+                    <div class="subject-icon" style="background:#10B98118;">📖</div>
+                    <h3>Ingliz tili</h3>
+                </div>
+                <div class="subject-card">
+                    <div class="subject-icon" style="background:#8B5CF618;">💻</div>
+                    <h3>Informatika</h3>
+                </div>
+                <div class="subject-card">
+                    <div class="subject-icon" style="background:#F59E0B18;">⚛️</div>
+                    <h3>Fizika</h3>
+                </div>
+                <div class="subject-card">
+                    <div class="subject-icon" style="background:#EF444418;">🧬</div>
+                    <h3>Biologiya</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section id="progress">
+        <div class="stats-grid">
+            <div class="stat-item reveal">
+                <div class="stat-number" data-target="50000">0+</div>
+                <div class="stat-label">Faol o'quvchilar</div>
+            </div>
+            <div class="stat-item reveal">
+                <div class="stat-number" data-target="1000000">0+</div>
+                <div class="stat-label">Javob berildi</div>
+            </div>
+            <div class="stat-item reveal">
+                <div class="stat-number" data-target="49">0/50</div>
+                <div class="stat-label">O'rtacha baho</div>
+            </div>
+            <div class="stat-item reveal">
+                <div class="stat-number" data-target="98">0%</div>
+                <div class="stat-label">Mamnuniyat</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEMO -->
+    <section id="demo">
+        <div class="demo-container">
+            <div class="reveal" style="text-align:center; margin-bottom:60px">
+                <span style="background:#EFF6FF; color:#1D4ED8; padding:8px 20px; border-radius:999px; font-size:0.75rem; font-weight:800">Sinab ko'ring</span>
+                <h2 class="section-title" style="color:#0f172a">AI bilan suhbatlashing</h2>
+            </div>
+            <div class="demo-chips reveal">
+                <button class="demo-chip" onclick="handleChip('Algebra')">📐 Algebra</button>
+                <button class="demo-chip" onclick="handleChip('IELTS')">📖 IELTS</button>
+                <button class="demo-chip" onclick="handleChip('Python')">💻 Python</button>
+                <button class="demo-chip" onclick="handleChip('Fizika')">⚛️ Fizika</button>
+                <button class="demo-chip" onclick="handleChip('Biologiya')">🧬 Biologiya</button>
+            </div>
+            <div class="demo-input-row reveal">
+                <input class="demo-input" id="demo-input" placeholder="Nimani o'rganmoqchisiz?">
+                <button class="demo-btn" id="demo-btn" onclick="runDemo()">So'rash →</button>
+            </div>
+            <div class="demo-output reveal">
+                <p id="demo-output-text">Salom! Men AQLVOY — sizning AI ustozingizman. Sizga yordam berishga tayyorman! 🚀</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+        <div class="faq-wrap">
+            <div class="reveal" style="text-align:center; margin-bottom:64px">
+                <h2 class="section-title">Ko'p so'raladigan savollar</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item reveal"><button class="faq-question" onclick="toggleFaq(this)"><span>AQLVOY bepulmi?</span><span class="faq-chevron">▼</span></button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Ha, AQLVOY ning asosiy imkoniyatlari bepul. Kuniga 10 ta savol bepul berishingiz mumkin.</div>
+                    </div>
+                </div>
+                <div class="faq-item reveal"><button class="faq-question" onclick="toggleFaq(this)"><span>AQLVOY qaysi fanlarni qamrab oladi?</span><span class="faq-chevron">▼</span></button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Matematika, Fizika, Kimyo, Biologiya, Tarix, Ingliz tili, Dasturlash va boshqa ko'plab fanlar.</div>
+                    </div>
+                </div>
+                <div class="faq-item reveal"><button class="faq-question" onclick="toggleFaq(this)"><span>Telegram orqali kirishim mumkinmi?</span><span class="faq-chevron">▼</span></button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Ha! Telegram akkauntingiz orqali bir bosimda ro'yxatdan o'tishingiz mumkin.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta">
+        <div>
+            <h2 style="font-family:'Baloo 2', cursive; font-weight:900; font-size:clamp(2.5rem,5vw,4rem); margin-bottom:32px">Bugunoq <span class="text-gradient-gold">AQLVOY</span> bilan o'rganishni boshlang</h2>
+            <p style="font-size:1.25rem; color:rgba(255,255,255,0.7); margin-bottom:48px">Minglab o'quvchilar allaqachon AQLVOY bilan muvaffaqiyatga erishmoqda. Navbat sizda!</p>
+            <div class="cta-btns">
+                <button class="btn-cta-primary" onclick="window.location.href='/register/'">🚀 Bepul Boshlash</button>
+                <button class="btn-cta-secondary" onclick="window.open('https://t.me/aqlvoyai', '_blank')">📱 Telegram kanalimiz</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-brand">
+                    <svg viewBox="0 0 100 100" fill="none">
+                        <circle cx="50" cy="50" r="44" fill="#06b6d4"/>
+                        <path d="M50 26 L62 48 L56 48 L56 66 L44 66 L44 48 L38 48 L50 26Z" fill="white"/>
+                    </svg>
+                    <span><span style="color:#22d3ee">AQL</span>VOY</span>
+                </div>
+                <p class="footer-desc">O'zbekiston o'quvchilari uchun sun'iy intellekt asosidagi ta'lim platformasi.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Sahifalar</h4>
+                <ul>
+                    <li><button onclick="scrollToSection('ai-features')">Imkoniyatlar</button></li>
+                    <li><button onclick="scrollToSection('subjects')">Fanlar</button></li>
+                    <li><button onclick="scrollToSection('demo')">Demo</button></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Aloqa</h4>
+                <ul>
+                    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12H22M12 2C9.5 4.5 8 8 8 12 8 16 9.5 19.5 12 22 14.5 19.5 16 16 16 12 16 8 14.5 4.5 12 2Z"/></svg>aqlvoyai.uz</li>
+                    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7L12 13L2 7" stroke-linecap="round"/></svg>info@aqlvoyai.uz</li>
+                    <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z"/><circle cx="12" cy="12" r="3"/></svg>t.me/aqlvoyai</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 AQLVOY. Barcha huquqlar himoyalangan.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Splash screen
+        setTimeout(function() {
+            var splash = document.getElementById('splash');
+            if (splash) {
+                splash.classList.add('out');
+                setTimeout(function() {
+                    splash.style.display = 'none';
+                }, 700);
+            }
+        }, 2200);
+
+        // Scroll navbar effect
+        window.addEventListener('scroll', function() {
+            var nav = document.getElementById('navbar');
+            if (nav) {
+                if (window.scrollY > 20) nav.classList.add('scrolled');
+                else nav.classList.remove('scrolled');
+            }
+            checkReveal();
+            animateStats();
+        });
+
+        function scrollToSection(id) {
+            var el = document.getElementById(id);
+            if (el) el.scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        function toggleMenu() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('open');
+        }
+
+        function closeMenu() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.remove('open');
+        }
+
+        function toggleFaq(btn) {
+            btn.closest('.faq-item').classList.toggle('open');
+        }
+
+        function checkReveal() {
+            var reveals = document.querySelectorAll('.reveal');
+            for (var i = 0; i < reveals.length; i++) {
+                var rect = reveals[i].getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.88) {
+                    reveals[i].classList.add('visible');
+                }
+            }
+        }
+
+        var statsAnimated = false;
+
+        function animateStats() {
+            if (statsAnimated) return;
+            var statsSection = document.getElementById('progress');
+            if (statsSection && statsSection.getBoundingClientRect().top < window.innerHeight * 0.85) {
+                statsAnimated = true;
+                var statNumbers = document.querySelectorAll('.stat-number[data-target]');
+                for (var i = 0; i < statNumbers.length; i++) {
+                    (function(el) {
+                        var target = parseInt(el.getAttribute('data-target'));
+                        var current = 0;
+                        var step = target / 50;
+                        var timer = setInterval(function() {
+                            current += step;
+                            if (current >= target) {
+                                if (target === 50000) el.textContent = '50,000+';
+                                else if (target === 1000000) el.textContent = '1,000,000+';
+                                else if (target === 49) el.textContent = '49/50';
+                                else if (target === 98) el.textContent = '98%';
+                                clearInterval(timer);
+                            } else {
+                                if (target === 50000) el.textContent = Math.floor(current).toLocaleString() + '+';
+                                else if (target === 1000000) el.textContent = Math.floor(current).toLocaleString() + '+';
+                                else if (target === 49) el.textContent = Math.floor(current / 50 * 49) + '/50';
+                                else if (target === 98) el.textContent = Math.floor(current) + '%';
+                            }
+                        }, 30);
+                    })(statNumbers[i]);
+                }
+            }
+        }
+
+        var chipResponses = {
+            Algebra: "Algebra — tenglamalar, ifodalar va funksiyalar haqidagi fan. Masalan: 2x + 3 = 7 → 2x = 4 → x = 2. 🧮",
+            IELTS: "IELTS imtihonida 4 bo'lim bor: Listening, Reading, Writing va Speaking. Band 7.0 olish uchun har kuni kamida 30 daqiqa mashq qiling. 📖",
+            Python: "Python — eng oson dasturlash tillari! print('Hello, World!') — birinchi kodingiz. 💻",
+            Fizika: "Fizika — tabiat qonunlari. Newtonning ikkinchi qonuni: F = m × a. ⚛️",
+            Biologiya: "Biologiya tirik organizmlarni o'rganadi. Hujayra — hayotning asosiy birligi. 🧬"
+        };
+
+        var typingInterval = null;
+
+        function typeText(text) {
+            if (typingInterval) clearInterval(typingInterval);
+            var output = document.getElementById('demo-output-text');
+            output.innerHTML = '';
+            var i = 0;
+            typingInterval = setInterval(function() {
+                if (i < text.length) {
+                    output.innerHTML = text.slice(0, i + 1) + '<span class="typing-cursor"></span>';
+                    i++;
+                } else {
+                    clearInterval(typingInterval);
+                    output.innerHTML = text;
+                }
+            }, 18);
+        }
+
+        function handleChip(topic) {
+            var chips = document.querySelectorAll('.demo-chip');
+            for (var i = 0; i < chips.length; i++) chips[i].classList.remove('active');
+            event.target.classList.add('active');
+            document.getElementById('demo-input').value = topic + ' haqida tushuntir';
+            typeText(chipResponses[topic] || 'AQLVOY yordamga tayyor!');
+        }
+
+        async function runDemo() {
+            var val = document.getElementById('demo-input').value.trim();
+            if (!val) return;
+            var btn = document.getElementById('demo-btn');
+            btn.disabled = true;
+            document.getElementById('demo-output-text').innerHTML = '⏳ AQLVOY o\'ylayapti...';
+            await new Promise(function(r) {
+                setTimeout(r, 800);
+            });
+            var found = null;
+            var entries = Object.entries(chipResponses);
+            for (var i = 0; i < entries.length; i++) {
+                if (val.toLowerCase().includes(entries[i][0].toLowerCase())) {
+                    found = entries[i][1];
+                    break;
+                }
+            }
+            typeText(found || "Salom! Men AQLVOY — sizning AI ustozingizman. " + val + " haqida savolingizni qabul qildim! To'liq versiyada batafsil javob beraman 🚀");
+            btn.disabled = false;
+        }
+
+        var demoInput = document.getElementById('demo-input');
+        if (demoInput) {
+            demoInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') runDemo();
+            });
+        }
+
+        setTimeout(checkReveal, 100);
+    </script>
+</body>
+
+</html>
