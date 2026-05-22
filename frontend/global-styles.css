@@ -1,0 +1,395 @@
+/**
+ * ════════════════════════════════════════════════════════════════════════════
+ * AQLVOY — IMPROVED GLOBAL STYLES
+ * Optimized, Clean, Production-Ready
+ * ════════════════════════════════════════════════════════════════════════════
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESET & BASE STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  transition: background-color 200ms, color 200ms;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-extrabold);
+  line-height: var(--leading-tight);
+  color: var(--text-primary);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-4);
+}
+
+h1 {
+  font-size: var(--text-4xl);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: var(--text-3xl);
+  letter-spacing: -0.015em;
+}
+
+h3 {
+  font-size: var(--text-2xl);
+  letter-spacing: -0.01em;
+}
+
+h4 {
+  font-size: var(--text-xl);
+}
+
+h5 {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+}
+
+h6 {
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+}
+
+p {
+  margin-bottom: var(--space-4);
+  color: var(--text-secondary);
+}
+
+a {
+  color: var(--color-cyan-600);
+  text-decoration: none;
+  transition: color 200ms;
+}
+
+a:hover {
+  color: var(--color-cyan-500);
+  text-decoration: underline;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-cyan-500);
+  outline-offset: 2px;
+}
+
+strong {
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+em {
+  font-style: italic;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--bg-tertiary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  color: var(--color-error);
+}
+
+pre {
+  background: var(--bg-secondary);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  margin-bottom: var(--space-6);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LISTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+ul, ol {
+  margin-bottom: var(--space-6);
+  margin-left: var(--space-6);
+}
+
+li {
+  margin-bottom: var(--space-2);
+}
+
+dt {
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+}
+
+dd {
+  margin-bottom: var(--space-4);
+  color: var(--text-secondary);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITIES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 0 var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 var(--space-8);
+  }
+}
+
+/* Flex utilities */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Grid utilities */
+.grid {
+  display: grid;
+}
+
+.gap-4 { gap: var(--space-4); }
+.gap-6 { gap: var(--space-6); }
+.gap-8 { gap: var(--space-8); }
+
+/* Margin utilities */
+.mt-0 { margin-top: 0; }
+.mt-2 { margin-top: var(--space-2); }
+.mt-4 { margin-top: var(--space-4); }
+.mt-6 { margin-top: var(--space-6); }
+.mt-8 { margin-top: var(--space-8); }
+
+.mb-0 { margin-bottom: 0; }
+.mb-2 { margin-bottom: var(--space-2); }
+.mb-4 { margin-bottom: var(--space-4); }
+.mb-6 { margin-bottom: var(--space-6); }
+.mb-8 { margin-bottom: var(--space-8); }
+
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+/* Padding utilities */
+.p-4 { padding: var(--space-4); }
+.p-6 { padding: var(--space-6); }
+.p-8 { padding: var(--space-8); }
+
+.px-4 { padding-left: var(--space-4); padding-right: var(--space-4); }
+.py-4 { padding-top: var(--space-4); padding-bottom: var(--space-4); }
+
+/* Text utilities */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.text-xs { font-size: var(--text-xs); }
+.text-sm { font-size: var(--text-sm); }
+.text-base { font-size: var(--text-base); }
+.text-lg { font-size: var(--text-lg); }
+.text-xl { font-size: var(--text-xl); }
+.text-2xl { font-size: var(--text-2xl); }
+
+.font-light { font-weight: var(--weight-light); }
+.font-normal { font-weight: var(--weight-normal); }
+.font-medium { font-weight: var(--weight-medium); }
+.font-semibold { font-weight: var(--weight-semibold); }
+.font-bold { font-weight: var(--weight-bold); }
+.font-extrabold { font-weight: var(--weight-extrabold); }
+
+.leading-tight { line-height: var(--leading-tight); }
+.leading-normal { line-height: var(--leading-normal); }
+.leading-relaxed { line-height: var(--leading-relaxed); }
+
+/* Display utilities */
+.block { display: block; }
+.inline { display: inline; }
+.inline-block { display: inline-block; }
+.hidden { display: none; }
+
+.invisible { visibility: hidden; }
+.visible { visibility: visible; }
+
+/* Opacity utilities */
+.opacity-50 { opacity: 0.5; }
+.opacity-75 { opacity: 0.75; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCROLLBAR STYLING
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-cyan-500);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-cyan-600);
+}
+
+/* Firefox */
+* {
+  scrollbar-color: var(--color-cyan-500) var(--bg-secondary);
+  scrollbar-width: thin;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FORM RESET
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FOCUS VISIBLE - Global accessibility
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-cyan-500);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DARK MODE SUPPORT
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+body.dark-mode {
+  color-scheme: dark;
+}
+
+body.light-mode {
+  color-scheme: light;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRINT STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  a {
+    text-decoration: underline;
+    color: blue;
+  }
+
+  button,
+  .btn {
+    display: none;
+  }
+
+  img {
+    max-width: 100%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
