@@ -206,6 +206,63 @@ def profile(request):
 
 
 # ---------------------------------------------------------------------------
+# Student stats  — /api/v1/users/me/stats/
+# ---------------------------------------------------------------------------
+
+@csrf_exempt
+@jwt_required
+@require_http_methods(['GET'])
+def student_stats(request):
+    """
+    GET /api/v1/users/me/stats/
+    Returns live stats for the dashboard: points, sessions, tasks.
+    """
+    from apps.sessions.models import StudentSession, TaskAttempt
+
+    user = request.user
+    completed_sessions = StudentSession.objects.filter(
+        student=user, status=StudentSession.Status.COMPLETED
+    ).count()
+    correct_tasks = TaskAttempt.objects.filter(
+        session__student=user, is_correct=True
+    ).count()
+
+    return JsonResponse({
+        'total_points':        user.total_points,
+        'sessions_completed':  completed_sessions,
+        'tasks_correct':       correct_tasks,
+        'grade':               user.grade,
+        'name':                user.full_name or user.first_name,
+    })
+
+
+# ---------------------------------------------------------------------------
+# Leaderboard  — /api/v1/users/leaderboard/
+# ---------------------------------------------------------------------------
+
+@csrf_exempt
+@jwt_required
+@require_http_methods(['GET'])
+def leaderboard(request):
+    """
+    GET /api/v1/users/leaderboard/?limit=10
+    Returns top users by total_points. Marks which entry is the current user.
+    """
+    limit = min(int(request.GET.get('limit', 10)), 50)
+    top = User.objects.filter(is_active=True, role=User.Role.STUDENT).order_by('-total_points')[:limit]
+    me_id = request.user.id
+    entries = []
+    for rank, u in enumerate(top, start=1):
+        entries.append({
+            'rank':         rank,
+            'name':         u.full_name or u.first_name,
+            'total_points': u.total_points,
+            'is_me':        u.id == me_id,
+        })
+    return JsonResponse({'leaderboard': entries})
+
+
+# ---------------------------------------------------------------------------
 # Parent–child  — /api/v1/users/
 # ---------------------------------------------------------------------------
 

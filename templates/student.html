@@ -708,6 +708,91 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
         
+        /* AI recommendation banner */
+        .ai-rec-banner {
+            background: linear-gradient(135deg, rgba(6,182,212,0.12), rgba(37,99,235,0.10));
+            border: 1px solid rgba(6,182,212,0.25);
+            border-radius: 14px;
+            padding: 18px 22px;
+            margin: 24px 0;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .ai-rec-banner .ai-rec-icon { font-size: 2rem; flex-shrink: 0; }
+        .ai-rec-banner .ai-rec-body { flex: 1; min-width: 0; }
+        .ai-rec-banner .ai-rec-title { font-weight: 800; font-size: 1rem; color: var(--text); margin-bottom: 4px; }
+        .ai-rec-banner .ai-rec-desc  { font-size: 0.84rem; color: var(--muted); }
+        .ai-rec-btn {
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.88rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .ai-rec-btn:hover { opacity: .88; }
+
+        /* Media assets grid */
+        .media-section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            margin-top: 8px;
+            color: var(--text);
+        }
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .media-card {
+            background: var(--card);
+            border: 1px solid var(--muted-2);
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.18s, border-color 0.18s;
+        }
+        .media-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+        .media-thumb {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            background: rgba(255,255,255,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+        .media-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .media-card-body { padding: 10px 12px; }
+        .media-card-title { font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .media-type-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: rgba(6,182,212,0.12);
+            color: var(--cyan-400);
+        }
+
+        /* Book cover in cards */
+        .book-cover-img {
+            width: 100%;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
         .hamburger {
             display: none;
             position: fixed;
@@ -840,20 +925,20 @@
                     </div>
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="sc-label">Bajarilgan vazifalar</div>
-                            <div class="sc-value">24</div>
+                            <div class="sc-label">To'g'ri javoblar</div>
+                            <div class="sc-value" id="stat-tasks">—</div>
                         </div>
                         <div class="stat-card">
                             <div class="sc-label">Umumiy ball</div>
-                            <div class="sc-value">1,840</div>
+                            <div class="sc-value" id="stat-points">—</div>
                         </div>
                         <div class="stat-card">
-                            <div class="sc-label">Streak (kun)</div>
-                            <div class="sc-value">7</div>
+                            <div class="sc-label">Yakunlangan sessiyalar</div>
+                            <div class="sc-value" id="stat-sessions">—</div>
                         </div>
                         <div class="stat-card">
-                            <div class="sc-label">O'rtacha baho</div>
-                            <div class="sc-value">4.7</div>
+                            <div class="sc-label">Sinf</div>
+                            <div class="sc-value" id="stat-grade">—</div>
                         </div>
                     </div>
                     <div class="dash-grid">
@@ -930,6 +1015,22 @@
                         </div>
                         <div id="subjects-loading" style="text-align:center;padding:40px;color:var(--muted)">Yuklanmoqda…</div>
                         <div id="subjects-grid" class="subjects-grid"></div>
+
+                        <!-- AI recommendation banner — always visible in subjects view -->
+                        <div class="ai-rec-banner" id="ai-rec-banner">
+                            <div class="ai-rec-icon">🤖</div>
+                            <div class="ai-rec-body">
+                                <div class="ai-rec-title">AI Ustoz bilan birga o'rganing!</div>
+                                <div class="ai-rec-desc">Qaysi mavzu qiyin bo'lsa — AI dan so'rang. Tushuntirib, yechimga yo'naltiradi.</div>
+                            </div>
+                            <button class="ai-rec-btn" onclick="showTab('ai')">🚀 AI bilan suhbat</button>
+                        </div>
+
+                        <!-- Interactive media assets for this grade -->
+                        <div id="media-section" style="display:none">
+                            <div class="media-section-title">🎬 Interaktiv Media Resurslar</div>
+                            <div id="media-grid" class="media-grid"></div>
+                        </div>
                     </div>
 
                     <!-- Level 2: Books for a subject -->
@@ -1024,7 +1125,8 @@
                         <div class="dash-title">Reyting 🏆</div>
                     </div>
                     <div class="dash-card">
-                        <table class="dash-table">
+                        <div id="leaderboard-loading" style="text-align:center;padding:30px;color:var(--muted)">Yuklanmoqda…</div>
+                        <table class="dash-table" id="leaderboard-table" style="display:none">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -1032,28 +1134,7 @@
                                     <th>Ball</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Bobur Toshmatov</td>
-                                    <td>2,340</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Nilufar Ergasheva</td>
-                                    <td>2,180</td>
-                                </tr>
-                                <tr style="background:rgba(6,182,212,0.1)">
-                                    <td>3</td>
-                                    <td><strong>Siz</strong></td>
-                                    <td><strong>1,840</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>Kamola Tursunova</td>
-                                    <td>1,720</td>
-                                </tr>
-                            </tbody>
+                            <tbody id="leaderboard-tbody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -1099,6 +1180,10 @@
                 _subjectsLoaded = true;
                 loadSubjects();
             }
+            if (tab === 'rating' && !_leaderboardLoaded) {
+                _leaderboardLoaded = true;
+                loadLeaderboard();
+            }
         }
 
         function toggleSidebar() {
@@ -1107,6 +1192,58 @@
 
         function logout() {
             window.location.href = '/';
+        }
+
+        // ── Stats from backend ────────────────────────────────────────────
+        async function loadStats() {
+            try {
+                const res = await apiRequest('/api/v1/users/me/stats/');
+                document.getElementById('stat-tasks').textContent    = res.tasks_correct    ?? '—';
+                document.getElementById('stat-points').textContent   = res.total_points     ?? '—';
+                document.getElementById('stat-sessions').textContent = res.sessions_completed ?? '—';
+                document.getElementById('stat-grade').textContent    = res.grade != null ? res.grade + '-sinf' : '—';
+                // Also update header grade label if grade came from API
+                if (res.grade != null) {
+                    document.getElementById('user-class').textContent = res.grade + '-sinf';
+                    document.getElementById('grade-label').textContent = res.grade + '-sinf';
+                }
+                if (res.name) {
+                    document.getElementById('user-name').textContent     = res.name.split(' ')[0];
+                    document.getElementById('user-avatar').textContent   = (res.name[0] || 'O').toUpperCase();
+                    document.getElementById('greeting-name').textContent = res.name.split(' ')[0];
+                }
+            } catch (_) { /* stats are cosmetic — ignore errors */ }
+        }
+
+        // ── Leaderboard ───────────────────────────────────────────────────
+        let _leaderboardLoaded = false;
+
+        async function loadLeaderboard() {
+            const loading = document.getElementById('leaderboard-loading');
+            const table   = document.getElementById('leaderboard-table');
+            const tbody   = document.getElementById('leaderboard-tbody');
+            try {
+                const res = await apiRequest('/api/v1/users/leaderboard/?limit=10');
+                loading.style.display = 'none';
+                if (!res.leaderboard || res.leaderboard.length === 0) {
+                    loading.textContent = 'Hali reytingda o\'quvchilar yo\'q.';
+                    loading.style.display = '';
+                    return;
+                }
+                tbody.innerHTML = '';
+                res.leaderboard.forEach(entry => {
+                    const tr = document.createElement('tr');
+                    if (entry.is_me) tr.style.background = 'rgba(6,182,212,0.1)';
+                    tr.innerHTML = `
+                        <td>${entry.rank}</td>
+                        <td>${entry.is_me ? '<strong>Siz</strong>' : escapeHtml(entry.name)}</td>
+                        <td>${entry.is_me ? '<strong>' + entry.total_points.toLocaleString() + '</strong>' : entry.total_points.toLocaleString()}</td>`;
+                    tbody.appendChild(tr);
+                });
+                table.style.display = '';
+            } catch (e) {
+                loading.textContent = 'Reyting yuklanmadi.';
+            }
         }
 
         // ── Subjects / Books / Topics drill-down ─────────────────────────
@@ -1146,6 +1283,9 @@
                     card.style.borderTop = `3px solid ${color}`;
                     grid.appendChild(card);
                 });
+
+                // Load interactive media assets for this grade
+                loadMediaAssets(grade || null);
             } catch (e) {
                 load.style.display = 'none';
                 grid.innerHTML = `<p style="color:#ef4444;padding:20px">Xatolik: ${escapeHtml(e.message)}</p>`;
@@ -1175,8 +1315,12 @@
                     const card = document.createElement('div');
                     card.className = 'subject-card';
                     card.style.borderTop = `3px solid ${color || '#06b6d4'}`;
+                    const coverHtml = book.cover
+                        ? `<img class="book-cover-img" src="${escapeHtml(book.cover)}" alt="${escapeHtml(book.title)}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">`
+                          + `<div class="icon" style="font-size:2rem;display:none">📗</div>`
+                        : `<div class="icon" style="font-size:2rem">📗</div>`;
                     card.innerHTML = `
-                        <div class="icon" style="font-size:2rem">📗</div>
+                        ${coverHtml}
                         <h3>${escapeHtml(book.title)}</h3>
                         <small style="color:var(--muted)">${book.grade}-sinf</small>`;
                     card.onclick = () => loadTopics(book.id, book.title);
@@ -1222,6 +1366,91 @@
             } catch (e) {
                 load.style.display = 'none';
                 list.innerHTML = `<p style="color:#ef4444;padding:20px">Xatolik: ${escapeHtml(e.message)}</p>`;
+            }
+        }
+
+        // ── Media Assets ──────────────────────────────────────────────────
+        const MEDIA_TYPE_ICONS = { video: '🎬', game: '🎮', audio: '🎵', image: '🖼️', document: '📄' };
+        const MEDIA_TYPE_LABELS = { video: 'Video', game: "O'yin", audio: 'Audio', image: 'Rasm', document: 'Hujjat' };
+
+        async function loadMediaAssets(grade) {
+            const section = document.getElementById('media-section');
+            const grid    = document.getElementById('media-grid');
+            grid.innerHTML = '<p style="color:var(--muted);font-size:.85rem">Yuklanmoqda…</p>';
+            section.style.display = '';
+
+            try {
+                const url = grade ? `/api/v1/media-assets/?grade=${grade}` : '/api/v1/media-assets/';
+                const res = await apiRequest(url);
+                if (!res.assets || res.assets.length === 0) {
+                    section.style.display = 'none';
+                    return;
+                }
+                grid.innerHTML = '';
+                res.assets.forEach(asset => {
+                    const icon  = MEDIA_TYPE_ICONS[asset.asset_type]  || '📁';
+                    const label = MEDIA_TYPE_LABELS[asset.asset_type] || asset.asset_type;
+                    const card  = document.createElement('div');
+                    card.className = 'media-card';
+
+                    // Build thumb without inline onerror (avoid emoji-in-attribute issues)
+                    const thumbWrap = document.createElement('div');
+                    thumbWrap.className = 'media-thumb';
+                    if (asset.thumbnail) {
+                        const img = document.createElement('img');
+                        img.src   = asset.thumbnail;
+                        img.alt   = asset.title;
+                        img.onerror = () => { thumbWrap.textContent = icon; };
+                        thumbWrap.appendChild(img);
+                    } else {
+                        thumbWrap.textContent = icon;
+                    }
+
+                    const body = document.createElement('div');
+                    body.className = 'media-card-body';
+                    body.innerHTML = `<div class="media-card-title">${escapeHtml(asset.title)}</div>
+                                      <span class="media-type-badge">${escapeHtml(label)}</span>`;
+
+                    card.appendChild(thumbWrap);
+                    card.appendChild(body);
+                    card.onclick = () => openMediaAsset(asset);
+                    grid.appendChild(card);
+                });
+            } catch (e) {
+                section.style.display = 'none';
+            }
+        }
+
+        function openMediaAsset(asset) {
+            if (!asset.url) return;
+            const ytMatch = asset.url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([A-Za-z0-9_-]{11})/);
+            if (ytMatch) {
+                // Build modal entirely via DOM (no innerHTML with close-button selector hacks)
+                const overlay = document.createElement('div');
+                overlay.className = 'video-modal-overlay';
+                overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
+
+                const box = document.createElement('div');
+                box.style.cssText = 'position:relative;width:100%;max-width:840px;aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden';
+
+                const iframe = document.createElement('iframe');
+                iframe.src = `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`;
+                iframe.style.cssText = 'width:100%;height:100%;border:none';
+                iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+                iframe.allowFullscreen = true;
+
+                const closeBtn = document.createElement('button');
+                closeBtn.textContent = '✕';
+                closeBtn.style.cssText = 'position:absolute;top:10px;right:10px;background:rgba(0,0,0,.75);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:1.1rem;cursor:pointer;z-index:1';
+                closeBtn.onclick = () => overlay.remove();
+
+                box.appendChild(iframe);
+                box.appendChild(closeBtn);
+                overlay.appendChild(box);
+                overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+                document.body.appendChild(overlay);
+            } else {
+                window.open(asset.url, '_blank');
             }
         }
 
@@ -1279,6 +1508,7 @@ function escapeHtml(text) {
 
         // Initialize
         showTab('home');
+        loadStats();
 
         // Theme handling: initialize from localStorage and wire the toggle button
         (function() {
